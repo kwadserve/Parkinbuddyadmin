@@ -14,27 +14,67 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'phone',
+        'email',
+        'password',
+        'role_id',
+        'status',
+        'profile_image',
+        'login_type',
+        'first_name',
+        'last_name'
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->hasOne(Role::class,'id','role_id');
+    }
+
+
+    /**
+	 * Relations between the user and the bookings
+	 */
+	public function bookings() {
+		return $this->hasMany(Booking::class,'user_id','id');
+	}
+
+    public function passes()
+    {
+        return $this->belongsToMany(ParkingPass::class, 'user_passes');
+    }
+
+    public function assignedParkings()
+    {
+        return $this->hasMany(AssignParking::class, 'operator_id');
+    }
+
+	public function vehicle() {
+		return $this->hasOne(Vehicle::class,'user_id','id');
+	}
+
+
+
 }
