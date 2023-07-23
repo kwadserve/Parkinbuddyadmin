@@ -14,15 +14,22 @@ use App\Http\Controllers\DashboardController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/clear-cache', function (){
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    echo "all cleared";
+});
 
 Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/pb-login', function () {
     return view('admin.login');
-});
-Route::get('/user_logout', [AuthController::class, 'logout']);
+})->name('login');
 
+Route::get('/user_logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/user_login', [AuthController::class, 'authenticate']);
 Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('dashboard', [DashboardController::class, 'index']);

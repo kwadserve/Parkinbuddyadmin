@@ -94,7 +94,7 @@ class AuthController extends Controller
  
         $request->session()->regenerateToken();
 
-        return redirect()->to('/');
+        return redirect()->to('/pb-login');
     }
 
     public function forgot_password()
