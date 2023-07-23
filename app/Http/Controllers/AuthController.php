@@ -30,7 +30,10 @@ class AuthController extends Controller
             if ($userData['role']['role'] == 'admin' || $userData['role']['role'] == 'manager') {
                 return redirect()->to('/pb-admin/dashboard');
             } else {
-                return redirect()->to('/');
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')->with('message', "Sorry, Only Admin and Manager can login.");
             }         
         }
 
