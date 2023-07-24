@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,7 @@ Route::get('/pb-login', function () {
 Route::get('/user_logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/user_login', [AuthController::class, 'authenticate']);
 Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
-    Route::get('dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/filter', [UserController::class, 'filter']);
 });

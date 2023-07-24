@@ -20,7 +20,7 @@
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
             <a href="" class="flex mr-auto">
-                <img alt="Parkinbuddy" class="w-6" src="dist/images/logo.svg">
+                <img alt="Parkinbuddy" class="w-6" src="{{ URL::asset('dist/images/logo.svg') }}">
             </a>
             <a href="javascript:;" class="mobile-menu-toggler"> <i data-lucide="bar-chart-2" class="w-8 h-8 text-white transform -rotate-90"></i> </a>
         </div>
@@ -668,7 +668,8 @@
             <div class="side-nav__devider my-6"></div>
             <ul>
                 <li>
-                    <a href="javascript:;.html" class="side-menu side-menu--active">
+                    
+                    <a href="{{ url('pb-admin/dashboard') }}" class="{{(str_contains(url()->current(), '/pb-admin/dashboard')) ? 'side-menu side-menu--active' : 'side-menu'}}">
                         <div class="side-menu__icon"> <i data-lucide="home"></i> </div>
                         <div class="side-menu__title">
                             Dashboard 
@@ -676,7 +677,7 @@
                     </a>    
                 </li>
                 <li>
-                    <a href="javascript:;.html" class="side-menu">
+                    <a href="{{ url('pb-admin/users') }}" class="{{(str_contains(url()->current(), '/pb-admin/users')) ? 'side-menu side-menu--active' : 'side-menu'}}">
                         <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
                         <div class="side-menu__title">
                             Users
@@ -1353,7 +1354,8 @@
     <!-- BEGIN: JS Assets-->
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=["your-google-map-api"]&libraries=places"></script>
-    <script src="{{ URL::asset('dist/js/app.js') }}"></script>
+    @yield('scripts')
+    <script src="{{ URL::asset('src/js/app.js') }}"></script>
     <!-- END: JS Assets-->
 </body>
 
