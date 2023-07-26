@@ -88,9 +88,9 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!*****************************************!*\
-  !*** ./resources/js/ckeditor-inline.js ***!
-  \*****************************************/
+/*!***********************************!*\
+  !*** ./src/js/ckeditor-inline.js ***!
+  \***********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ckeditor_ckeditor5_build_inline__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ckeditor/ckeditor5-build-inline */ "./node_modules/@ckeditor/ckeditor5-build-inline/build/ckeditor.js");
 /* harmony import */ var _ckeditor_ckeditor5_build_inline__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_ckeditor_ckeditor5_build_inline__WEBPACK_IMPORTED_MODULE_0__);

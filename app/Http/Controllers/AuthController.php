@@ -22,11 +22,11 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
         $remember = $request->has('remember');
-        
+             
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
             $userData = User::with('role')->where("id",$user['id'])->first();
-                       
+                
             if ($userData['role']['role'] == 'admin' || $userData['role']['role'] == 'manager') {
                 return redirect()->to('/pb-admin/dashboard');
             } else {
@@ -36,10 +36,9 @@ class AuthController extends Controller
                 return redirect()->route('login')->with('message', "Sorry, Only Admin and Manager can login.");
             }         
         }
-
+        
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-            'password' => 'The provided credentials do not match our records.'
+            'email' => 'The provided credentials do not match our records.'
         ]);
     }
 
