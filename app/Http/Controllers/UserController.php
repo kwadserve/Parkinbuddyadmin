@@ -11,36 +11,15 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('admin.user.index');
+        $users = User::paginate(10); // Adjust the number per page as needed
+        return view('admin.user.index', compact('users'));
     }
 
     public function filter(Request $request)
     {
-        $query = User::query();
-        // Add filtering logic here based on the request data
-        // For example:
-        // if ($request->has('category')) {
-        //     $query->where('category', $request->category);
-        // }
-        $filteredUsers = $query->paginate(10);
-        // Render the users partial view to a string
-        $usersHtml = view('admin.users.user-list', ['users' => $filteredUsers])->render();
-
-        // Extract pagination links from the paginator instance
-        $paginationHtml = $this->getPaginationHtml($filteredUsers);
-
-         // Return AJAX response with product data and pagination links
-         return response()->json([
-            'data' => $usersHtml,
-            'pagination' => $paginationHtml,
-        ]);
+        $keyword = $request->input('keyword');
+        $users = User::where('name', 'like', "%$keyword%")->paginate(10);
+        return view('admin.user.user-list', compact('users'));
     }
 
-    // Helper method to extract pagination links from Paginator instance
-    private function getPaginationHtml(LengthAwarePaginator $paginator)
-    {
-        $paginator->appends(request()->all());
-        $paginatorHtml = $paginator->links()->toHtml();
-        return $paginatorHtml;
-    }
 }
