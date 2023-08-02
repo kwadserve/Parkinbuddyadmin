@@ -35,5 +35,4 @@ Route::post('/user_login', [AuthController::class, 'authenticate']);
 Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/filter', [UserController::class, 'filter']);
 });
