@@ -13328,6 +13328,9 @@ html body{
     .md\:col-span-6{
         grid-column: span 6 / span 6;
     }
+    .md\:col-span-12{
+        grid-column: span 12 / span 12;
+    }
     .md\:ml-0{
         margin-left: 0px;
     }

@@ -1,4 +1,6 @@
  <!-- BEGIN: Users Layout -->
+ <div class="grid grid-cols-12 gap-6 mt-5" >
+@if($users->count() > 0)
 @foreach ($users as $user)
     <div class="intro-y col-span-12 md:col-span-6">
         <div class="box">
@@ -18,3 +20,16 @@
         </div>
     </div>
 @endforeach
+<div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
+{!! $users->links('vendor.pagination.custom') !!}
+</div>
+@else
+<div class="intro-y col-span-12 md:col-span-12">
+    <div class="box">
+        <div class="flex flex-col lg:flex-row items-center p-5">
+            No record found.
+        </div>
+    </div>
+</div>
+@endif
+</div>

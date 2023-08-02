@@ -28,71 +28,47 @@
         </div>
     </div>
 </div>
-    <div class="grid grid-cols-12 gap-6 mt-5" id="users-list-container">
+    <div id="users-list-container">
         @include('admin.user.user-list')
     </div>
     <input type="hidden" id="mainUrl" value="<?php echo url('/'); ?>" />
-    
-    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
-        {{ $users->links() }}
-    </div>
+    <input type="hidden" id="pageNumber" value="1" />
 </div>
 <!-- END: Main Content -->
 @endsection
 
 @section('scripts')
 <script>
-    let baseurl = $('#mainUrl').val(); 
-    // function loadProducts(page = 1) {
-    //     $.ajax({
-    //         url: `/pb-admin/users/filter?page=${page}`,
-    //         type: 'GET',
-    //         success: function(response) {
-    //             // Update the product listing with the new data
-    //             $('#users-list').html(response.data);
-
-    //             // Update the pagination links
-    //             $('#pagination-links').html(response.pagination);
-    //         },
-    //         error: function(error) {
-    //             console.error(error);
-    //         }
-    //     });
-    // }
-    
-    $('#userSearch').on('input', function() {
-        var keyword = $(this).val();
-        $.ajax({
-            url: `${baseurl}/pb-admin/users/filter`,
-            method: 'GET',
-            data: { keyword: keyword },
-            success: function(response) {
-                $('#users-list-container').html(response);
-            }
-        });
-    });
-
-
-    function loadUsers(page = 1) {
+    let baseurl = $('#mainUrl').val();
         
-        $.ajax({
-            url: `${baseurl}/pb-admin/users?page=${page}`,
-            method: 'GET',
-            success: function(response) {
-                $('#user-list-container').html(response);
-            }
-        });
-    }
-
     $(document).ready(function() {
-        loadUsers();
+
+        const loadUsers = (page,search_term) => {
+            $.ajax({ 
+                method: 'GET',
+                url:`${baseurl}/pb-admin/users?page=${page}&seach_term=${search_term}`,
+                success:function(response){
+                    $('#users-list-container').html('');
+                    $('#users-list-container').html(response);
+                }
+            })
+        }
+
+        $(document).on('keyup', '#userSearch', function(){
+            var seach_term = $('#userSearch').val();
+            loadUsers(1,seach_term);
+        });
+
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            $("#pageNumber").val(page);
+            var search_term = $('#userSearch').val();
+            loadUsers(page,search_term);
+        });  
     });
     
     // Handle pagination links click event
-    // $(document).on('click', '.pagination a', function(event) {
-    //     event.preventDefault();
-    //     let page = $(this).attr('href').split('page=')[1];
-    //     loadUsers(page);
-    // });
+    
 </script>
 @endsection
