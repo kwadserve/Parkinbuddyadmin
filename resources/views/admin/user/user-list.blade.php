@@ -13,8 +13,7 @@
                     <div class="text-slate-500 text-xs mt-0.5">{{$user->phone}}</div>
                 </div>
                 <div class="flex mt-4 lg:mt-0">
-                    <button class="btn btn-primary py-1 px-2 mr-2">View Profile</button>
-                    
+                    <button class="btn btn-primary py-1 px-2 mr-2"> <a href="{{ url('pb-admin/user') }}/{{ $user->id }}/view">View Profile</a></button>
                 </div>
             </div>
         </div>

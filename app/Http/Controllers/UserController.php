@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -26,4 +27,10 @@ class UserController extends Controller
         return view('admin.user.index', compact('users'));
     }
 
+    public function viewDetail($id){
+        $userDetails = User::where('id', $id)->first(); 
+        $userBookingCount = Booking::where("user_id",$userDetails['id'])->count();
+       
+        return view('admin.user.detail', compact('userDetails','userBookingCount'));
+    }
 }
