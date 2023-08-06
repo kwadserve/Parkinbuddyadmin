@@ -32,10 +32,17 @@
         <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
             <div class="font-medium text-center lg:text-left lg:mt-3">Contact Details</div>
             <div class="flex flex-col justify-center items-center lg:items-start mt-4">
-                <div class="truncate sm:whitespace-normal flex items-center"> <i data-lucide="mail" class="w-4 h-4 mr-2"></i> {{$userDetails->email}} </div>
-                @if($userDetails->phone != null)
-                <div class="truncate sm:whitespace-normal flex items-center mt-3"> <i data-lucide="phone" class="w-4 h-4 mr-2"></i> {{$userDetails->phone}} </div>
-                @endif
+                
+                <div class="truncate sm:whitespace-normal flex items-center"> <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
+                    @if($userDetails->email != null) {{$userDetails->email}}
+                    @else {{'-'}}
+                    @endif
+                </div>
+                <div class="truncate sm:whitespace-normal flex items-center mt-3"> <i data-lucide="phone" class="w-4 h-4 mr-2"></i>
+                    @if($userDetails->phone != null) {{$userDetails->phone}}
+                    @else {{'-'}} 
+                    @endif
+                </div>
             </div>
         </div>
         <div class="mt-6 lg:mt-0 flex-1 flex items-center justify-center px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
@@ -44,7 +51,7 @@
                 <div class="text-slate-500">Total Bookings</div>
             </div>
             <div class="text-center rounded-md w-20 py-3">
-                <div class="font-medium text-primary text-xl">2500</div>
+                <div class="font-medium text-primary text-xl">{{$userBookingCashCollection + $userBookingChargeCollection}}</div>
                 <div class="text-slate-500">Total Collection</div>
             </div>
             
@@ -63,8 +70,49 @@
             <a href="javascript:;" class="nav-link py-4 flex items-center" data-tw-toggle="pill" data-tw-target="#example-tab-5" type="button" role="tab" aria-controls="example-tab-4"
             aria-selected="false"> <i class="w-4 h-4 mr-2" data-lucide="anchor"></i> User Vehicles </a>
         </li>
-        
     </ul>
+</div>
+<div class="tab-content mt-5">
+    <div id="example-tab-3" class="tab-pane leading-relaxed active" role="tabpanel" aria-labelledby="example-3-tab">
+        <!-- BEGIN: bookings -->
+        <div class="">
+            <input type="hidden" id="bookPageNumber" value="1" />
+            <div class="grid grid-cols-12 gap-6 mt-5">
+                <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2">
+                    <div class="flex w-full sm:w-auto">
+                        <div class="w-48 relative text-slate-500">
+                            <input type="text" id="userBookSearch" class="form-control w-48 box pr-10" placeholder="Search by Booking Id..">
+                            <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i> 
+                        </div>
+                        <select class="form-select box ml-2">
+                            <option>Status</option>
+                            <option>Yet to Start</option>
+                            <option>On Going</option>
+                            <option>Completed</option>
+                        </select>
+                    </div>
+                    <div class="hidden xl:block mx-auto text-slate-500"></div>
+                    <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel </button>
+                    </div>
+                </div>
+                <!-- BEGIN: Data List -->
+                <div class="intro-y col-span-12 overflow-y-auto 2xl:overflow-visible">
+                    <table class="table table-report -mt-2" id="bookingTable">
+                        @include('admin.user.booking-list')
+                    </table>
+                </div>
+                <!-- END: Data List -->
+            </div>
+        </div>
+        <!-- END: bookings -->        
+    </div>
+    <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
+        hi 2
+    </div>
+    <div id="example-tab-5" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
+        hi 3
+    </div>
 </div>
 <!-- END: Main Content -->
 @endsection

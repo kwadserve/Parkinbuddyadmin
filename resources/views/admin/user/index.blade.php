@@ -31,7 +31,6 @@
 <div id="users-list-container">
     @include('admin.user.user-list')
 </div>
-<input type="hidden" id="mainUrl" value="<?php echo url('/'); ?>" />
 <input type="hidden" id="pageNumber" value="1" />
 
 <!-- END: Main Content -->
