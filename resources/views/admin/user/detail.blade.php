@@ -19,6 +19,7 @@
         Profile Page
     </h2>
 </div>
+<input type="hidden" id="userProfileId" value="{{$userDetails->id}}" />
 <div class="intro-y box px-5 pt-5 mt-5">
     <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
         <div class="flex flex-1 px-5 items-center justify-center lg:justify-start">
@@ -26,7 +27,11 @@
                 <img alt="Midone - HTML Admin Template" class="rounded-full" src="{{ URL::asset('dist/images/pblogobw.png') }}">
             </div>
             <div class="ml-5">
-                <div class="w-24 sm:w-40 truncate sm:whitespace-normal font-medium text-lg">{{$userDetails->name}}</div>
+                <div class="w-24 sm:w-40 truncate sm:whitespace-normal font-medium text-lg">
+                    @if($userDetails && $userDetails->name != null) {{$userDetails->name}}
+                    @else {{'-'}}
+                    @endif
+                </div>
             </div>
         </div>
         <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
@@ -34,12 +39,12 @@
             <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                 
                 <div class="truncate sm:whitespace-normal flex items-center"> <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
-                    @if($userDetails->email != null) {{$userDetails->email}}
+                    @if($userDetails && $userDetails->email != null) {{$userDetails->email}}
                     @else {{'-'}}
                     @endif
                 </div>
                 <div class="truncate sm:whitespace-normal flex items-center mt-3"> <i data-lucide="phone" class="w-4 h-4 mr-2"></i>
-                    @if($userDetails->phone != null) {{$userDetails->phone}}
+                    @if($userDetails && $userDetails->phone != null) {{$userDetails->phone}}
                     @else {{'-'}} 
                     @endif
                 </div>
@@ -84,11 +89,11 @@
                             <input type="text" id="userBookSearch" class="form-control w-48 box pr-10" placeholder="Search by Booking Id..">
                             <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i> 
                         </div>
-                        <select class="form-select box ml-2">
-                            <option>Status</option>
-                            <option>Yet to Start</option>
-                            <option>On Going</option>
-                            <option>Completed</option>
+                        <select class="form-select box ml-2" id="userBookStatus">
+                            <option value="">Status</option>
+                            <option value="Yet to Start">Yet to Start</option>
+                            <option value="On Going">On Going</option>
+                            <option value="Completed">Completed</option>
                         </select>
                     </div>
                     <div class="hidden xl:block mx-auto text-slate-500"></div>
@@ -96,13 +101,9 @@
                         <button class="btn btn-primary shadow-md mr-2"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel </button>
                     </div>
                 </div>
-                <!-- BEGIN: Data List -->
-                <div class="intro-y col-span-12 overflow-y-auto 2xl:overflow-visible">
-                    <table class="table table-report -mt-2" id="bookingTable">
-                        @include('admin.user.booking-list')
-                    </table>
-                </div>
-                <!-- END: Data List -->
+            </div>
+            <div class="booking-list-container" id="booking-list-container">
+                @include('admin.user.booking-list')
             </div>
         </div>
         <!-- END: bookings -->        
@@ -118,5 +119,48 @@
 @endsection
 
 @section('scripts')
+<script>
+    let baseurl = $('#mainUrl').val();
+    let userProfileId= $("#userProfileId").val();
+    
 
+    $(document).ready(function() {
+
+        const loadUserBookings = (page,search_term,userBookStatus) => {
+            $.ajax({ 
+                method: 'GET',
+                url:`${baseurl}/pb-admin/user/bookings?page=${page}&seach_term=${search_term}&userProfileId=${userProfileId}&userBookStatus=${userBookStatus}`,
+                success:function(response){
+                    console.log(23232)
+                    $('#booking-list-container').html('');
+                    $('#booking-list-container').html(response);
+                }
+            })
+        }
+        // loadUserBookings(1,'');
+        $(document).on('keyup', '#userBookSearch', function(){
+            var seach_term = $('#userBookSearch').val();
+            let userBookStatus = $("#userBookStatus").val();
+            loadUserBookings(1,seach_term,userBookStatus);
+        });
+
+        $(document).on('click', '.booking-list-container .pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            $("#bookPageNumber").val(page);
+            var search_term = $('#userBookSearch').val();
+            let userBookStatus = $("#userBookStatus").val();
+            loadUserBookings(page,search_term,userBookStatus);
+        }); 
+        
+        $("#userBookStatus").change(function() { 
+            var search_term = $('#userBookSearch').val();
+            let userBookStatus = $("#userBookStatus").val();
+            loadUserBookings(1,search_term,userBookStatus);
+        });
+    });
+    
+    // Handle pagination links click event
+    
+</script>
 @endsection

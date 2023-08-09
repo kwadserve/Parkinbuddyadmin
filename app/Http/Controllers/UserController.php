@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Booking;
+use App\Models\UserPass;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -29,19 +30,23 @@ class UserController extends Controller
     }
 
     public function viewDetail($id){
-        $perPage = 10;
+        $perPage = 1;
         $userDetails = User::where('id', $id)->first(); 
-        $userBookingData = Booking::where("user_id",$userDetails['id'])->paginate($perPage);
-        $userBookingCashCollection = $userBookingData->sum('cash_collection');
-        $userBookingChargeCollection = $userBookingData->sum('charges');
-        $userBookingCount = $userBookingData->count();
-        
-        return view('admin.user.detail', compact('userDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection'));
+        $bookingData = Booking::where("user_id",$userDetails['id'])->paginate($perPage);
+        $userBookingCashCollection = $bookingData->sum('cash_collection');
+        $userBookingChargeCollection = $bookingData->sum('charges');
+        $userBookingCount = $bookingData->count();
+       
+        return view('admin.user.detail', compact('userDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData'));
     }
 
-    public function bookingListing(Request $request){
-        $perPage = 10;
+    public function userBookingListing(Request $request){
+        $perPage = 1;
         $bookingData = Booking::query()
+                        ->where("user_id",$request->userProfileId)
+                        ->when($request->filled('userBookStatus'), function ($query) use ($request) {
+                            return $query->where('status', $request->userBookStatus);
+                        })
                         ->when($request->seach_term, function($q)use($request){
                             $q->where('booking_id', 'like', '%'.$request->seach_term.'%');
                         })
