@@ -109,7 +109,28 @@
         <!-- END: bookings -->        
     </div>
     <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
-        hi 2
+       <!-- BEGIN: passes -->
+    <div class="">
+        <input type="hidden" id="passPageNumber" value="1" />
+        <div class="grid grid-cols-12 gap-6 mt-5">
+            <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2">
+                <div class="flex w-full sm:w-auto">
+                    <div class="w-48 relative text-slate-500">
+                        <input type="text" id="userPassSearch" class="form-control w-48 box pr-10" placeholder="Search by Pass Name">
+                        <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i> 
+                    </div>    
+                </div>
+                <div class="hidden xl:block mx-auto text-slate-500"></div>
+                <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
+                    <button class="btn btn-primary shadow-md mr-2"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel </button>
+                </div>
+            </div>
+        </div>
+        <div class="pass-list-container" id="pass-list-container">
+            @include('admin.user.pass-list')
+        </div>
+    </div>
+       <!-- END: passes -->
     </div>
     <div id="example-tab-5" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
         hi 3
@@ -126,6 +147,7 @@
 
     $(document).ready(function() {
 
+        //=====================booking listing start===============
         const loadUserBookings = (page,search_term,userBookStatus) => {
             $.ajax({ 
                 method: 'GET',
@@ -137,7 +159,7 @@
                 }
             })
         }
-        // loadUserBookings(1,'');
+  
         $(document).on('keyup', '#userBookSearch', function(){
             var seach_term = $('#userBookSearch').val();
             let userBookStatus = $("#userBookStatus").val();
@@ -158,9 +180,32 @@
             let userBookStatus = $("#userBookStatus").val();
             loadUserBookings(1,search_term,userBookStatus);
         });
-    });
-    
-    // Handle pagination links click event
-    
+         //================booking listing end===================
+        //==========================user pass listing start=================
+        const loadUserPasses = (page,search_term) => {
+            $.ajax({ 
+                method: 'GET',
+                url:`${baseurl}/pb-admin/user/passes?page=${page}&seach_term=${search_term}&userProfileId=${userProfileId}`,
+                success:function(response){
+                    // $('#pass-list-container').html('');
+                    $('#pass-list-container').html(response);
+                }
+            })
+        }
+
+        $(document).on('keyup', '#userPassSearch', function(){
+            var seach_term = $('#userPassSearch').val();
+            loadUserPasses(1,seach_term);
+        });
+
+        $(document).on('click', '#example-tab-4 .pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            $("#passPageNumber").val(page);
+            var search_term = $('#userPassSearch').val();
+            loadUserPasses(page,search_term);
+        }); 
+         //================user pass listing end=================================
+    });    
 </script>
 @endsection

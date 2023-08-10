@@ -59,9 +59,9 @@
         </p>
     </div>
     <select class="w-20 form-select box mt-3 sm:mt-0">
-        <option>10</option>
-        <option>25</option>
-        <option>35</option>
-        <option>50</option>
+        <option value="10">10</option>
+        <option value="10">25</option>
+        <option value="10">35</option>
+        <option value="10">50</option>
     </select>
 @endif

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\UserPass;
+use App\Models\Pass;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -37,7 +38,12 @@ class UserController extends Controller
         $userBookingChargeCollection = $bookingData->sum('charges');
         $userBookingCount = $bookingData->count();
        
-        return view('admin.user.detail', compact('userDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData'));
+        $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
+        ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
+        ->where('user_passes.user_id', $id) 
+        ->paginate($perPage);
+
+        return view('admin.user.detail', compact('userDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData'));
     }
 
     public function userBookingListing(Request $request){
@@ -52,5 +58,25 @@ class UserController extends Controller
                         })
                         ->paginate($perPage);
             return view('admin.user.booking-list', compact('bookingData'))->render();
+    }
+
+    public function userPassesListing(Request $request){
+        $perPage = 1;
+        $searchKey = $request->input('seach_term');
+        $userProfileId = $request->input('userProfileId');
+
+        $query  = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
+        ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
+        ->where('user_passes.user_id', $userProfileId);
+        
+        if ($searchKey) {
+            $query->where(function ($subquery) use ($searchKey) {
+                $subquery->where('passes.title', 'like', '%' . $searchKey . '%');
+            });
+        }
+
+        $userPassData = $query->paginate($perPage);
+
+        return view('admin.user.pass-list', compact('userPassData'))->render();
     }
 }
