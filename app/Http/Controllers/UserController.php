@@ -31,7 +31,7 @@ class UserController extends Controller
     }
 
     public function viewDetail($id){
-        $perPage = 1;
+        $perPage = 2;
         $userDetails = User::where('id', $id)->first(); 
         $bookingData = Booking::where("user_id",$userDetails['id'])->paginate($perPage);
         $userBookingCashCollection = $bookingData->sum('cash_collection');
@@ -47,7 +47,7 @@ class UserController extends Controller
     }
 
     public function userBookingListing(Request $request){
-        $perPage = 1;
+        $perPage = 2;
         $bookingData = Booking::query()
                         ->where("user_id",$request->userProfileId)
                         ->when($request->filled('userBookStatus'), function ($query) use ($request) {
@@ -61,7 +61,7 @@ class UserController extends Controller
     }
 
     public function userPassesListing(Request $request){
-        $perPage = 1;
+        $perPage = 2;
         $searchKey = $request->input('seach_term');
         $userProfileId = $request->input('userProfileId');
 
