@@ -11,12 +11,12 @@ class Vehicle extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
         'name',
+        'type',
         'number',
         'rc_image',
-        'city',
         'address',
-        'pincode'
+        'pincode',
+        'city',
     ];
 }

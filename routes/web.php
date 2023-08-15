@@ -38,4 +38,5 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/user/{id}/view', [UserController::class, 'viewDetail']);
     Route::get('/user/bookings', [UserController::class, 'userBookingListing']);
     Route::get('/user/passes', [UserController::class, 'userPassesListing']);
+    Route::get('/user/vehicles', [UserController::class, 'userVehiclesListing']);
 });

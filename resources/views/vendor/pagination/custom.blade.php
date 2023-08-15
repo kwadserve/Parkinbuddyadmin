@@ -58,10 +58,10 @@
             {!! __('results') !!}
         </p>
     </div>
-    <select class="w-20 form-select box mt-3 sm:mt-0">
-        <option>10</option>
-        <option>25</option>
-        <option>35</option>
-        <option>50</option>
+    <select class="w-20 form-select box mt-3 sm:mt-0 perPageSelectBox">
+        <option value="1" >10</option>
+        <option value="25">25</option>
+        <option value="35">35</option>
+        <option value="50">50</option>
     </select>
 @endif

@@ -72,8 +72,10 @@
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
-    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
-        {!! $userPassData->links('vendor.pagination.user-pass-pagination') !!}
+    @if($userPassData && $userPassData->count() > 0)
+    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" id="userPasses">
+        {!! $userPassData->links('vendor.pagination.custom') !!}
     </div>
+    @endif
     <!-- END: Pagination -->
 </div>

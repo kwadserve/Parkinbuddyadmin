@@ -144,8 +144,8 @@ use App\Models\Pass;
         </table>
     </div>
     @if($bookingData->count() > 0)
-    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
-        {!! $bookingData->links('vendor.pagination.user-book-pagination') !!}
+    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" id="userBook">
+        {!! $bookingData->links('vendor.pagination.custom') !!}
     </div>
     @endif
 </div>
