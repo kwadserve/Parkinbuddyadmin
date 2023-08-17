@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,5 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/user/bookings', [UserController::class, 'userBookingListing']);
     Route::get('/user/passes', [UserController::class, 'userPassesListing']);
     Route::get('/user/vehicles', [UserController::class, 'userVehiclesListing']);
+    Route::get('/vehicles', [VehicleController::class, 'index']);
 });

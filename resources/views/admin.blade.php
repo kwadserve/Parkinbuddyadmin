@@ -677,10 +677,18 @@
                     </a>    
                 </li>
                 <li>
-                    <a href="{{ url('pb-admin/users') }}" class="{{(str_contains(url()->current(), '/pb-admin/users')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                    <a href="{{ url('pb-admin/users') }}" class="{{(str_contains(url()->current(), '/pb-admin/user')) ? 'side-menu side-menu--active' : 'side-menu'}}">
                         <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
                         <div class="side-menu__title">
                             Users
+                        </div>
+                    </a>    
+                </li>
+                <li>
+                    <a href="{{ url('pb-admin/vehicles') }}" class="{{(str_contains(url()->current(), '/pb-admin/vehicles')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                        <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                        <div class="side-menu__title">
+                            Vehicles
                         </div>
                     </a>    
                 </li>
