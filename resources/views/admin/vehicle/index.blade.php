@@ -73,7 +73,7 @@
             loadUserVehicles(page,search_term,0);
         });
 
-        $("#userVehicles select.perPageSelectBox").change(function() {
+        $(document).on('change', '#userVehicles select.perPageSelectBox', function(event) {
             let perpage = $(this).val();
             let search_term = $('#userVehicleSearch').val();
             loadUserVehicles(1,search_term,perpage);

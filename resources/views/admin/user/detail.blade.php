@@ -201,8 +201,7 @@
             let userBookStatus = $("#userBookStatus").val();
             loadUserBookings(1,search_term,userBookStatus,0);
         });
-
-        $("#userBook select.perPageSelectBox").change(function() {
+        $(document).on('change', '#userBook select.perPageSelectBox', function(event) {
             let perpage = $(this).val(); 
             let search_term = $('#userBookSearch').val();
             let userBookStatus = $("#userBookStatus").val();
@@ -234,7 +233,7 @@
             loadUserPasses(page,search_term,0);
         });
 
-        $("#userPasses select.perPageSelectBox").change(function() {
+        $(document).on('change', '#userPasses select.perPageSelectBox', function(event) {
             let perpage = $(this).val();
             let search_term = $('#userPassSearch').val();
             loadUserPasses(1,search_term,perpage);
@@ -265,7 +264,7 @@
             loadUserVehicles(page,search_term,0);
         });
 
-        $("#userVehicles select.perPageSelectBox").change(function() {
+        $(document).on('change', '#userVehicles select.perPageSelectBox', function(event) {
             let perpage = $(this).val();
             let search_term = $('#userVehicleSearch').val();
             loadUserVehicles(1,search_term,perpage);
