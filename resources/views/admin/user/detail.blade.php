@@ -182,9 +182,9 @@
         }
   
         $(document).on('keyup', '#userBookSearch', function(){
-            var seach_term = $('#userBookSearch').val();
+            var search_term = $('#userBookSearch').val();
             let userBookStatus = $("#userBookStatus").val();
-            loadUserBookings(1,seach_term,userBookStatus,0);
+            loadUserBookings(1,search_term,userBookStatus,0);
         });
 
         $(document).on('click', '.booking-list-container .pagination a', function(event) {
@@ -221,8 +221,8 @@
         }
 
         $(document).on('keyup', '#userPassSearch', function(){
-            var seach_term = $('#userPassSearch').val();
-            loadUserPasses(1,seach_term,0);
+            var search_term = $('#userPassSearch').val();
+            loadUserPasses(1,search_term,0);
         });
 
         $(document).on('click', '#example-tab-4 .pagination a', function(event) {
@@ -252,8 +252,8 @@
         }
 
         $(document).on('keyup', '#userVehicleSearch', function(){
-            var seach_term = $('#userVehicleSearch').val();
-            loadUserVehicles(1,seach_term,0);
+            var search_term = $('#userVehicleSearch').val();
+            loadUserVehicles(1,search_term,0);
         });
         
         $(document).on('click', '#example-tab-5 .pagination a', function(event) {

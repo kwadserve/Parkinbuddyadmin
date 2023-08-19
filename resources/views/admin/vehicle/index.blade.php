@@ -40,7 +40,6 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="pageNumber" value="1" />
 
 <!-- END: Main Content -->
 @endsection
@@ -61,8 +60,8 @@
         }
 
         $(document).on('keyup', '#userVehicleSearch', function(){
-            var seach_term = $('#userVehicleSearch').val();
-            loadUserVehicles(1,seach_term,0);
+            var search_term = $('#userVehicleSearch').val();
+            loadUserVehicles(1,search_term,0);
         });
         
         $(document).on('click', '#example-tab-5 .pagination a', function(event) {
@@ -78,6 +77,12 @@
             let search_term = $('#userVehicleSearch').val();
             loadUserVehicles(1,search_term,perpage);
         });
+        
+        // const refreshUserListing = () => {
+        //     var search_term = $('#userVehicleSearch').val();
+        //     loadUserVehicles(1,search_term,0); // Load the first page of users
+        // }
+        // setInterval(refreshUserListing, 10000);
         //==========================user vehicle listing end=================
     });
     

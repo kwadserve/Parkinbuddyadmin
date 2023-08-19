@@ -14,13 +14,9 @@ class VehicleController extends Controller
     {
         $configPerPage = Config::get('custom.perPageRecord');
         $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
-        $searchKey = $request->input('seach_term');
         
-       
-        $userVehicleData = Vehicle::query()->paginate($perPage);
-       
-
         if($request->ajax()){
+            $searchKey = $request->input('seach_term');
             $query  = Vehicle::query();
         
             if ($searchKey) {
@@ -31,8 +27,9 @@ class VehicleController extends Controller
     
             $userVehicleData = $query->paginate($perPage);
             return view('admin.vehicle.vehicle-list', compact('userVehicleData'))->render();
+        }else{
+            $userVehicleData = Vehicle::query()->paginate($perPage);
+            return view('admin.vehicle.index', compact('userVehicleData'));
         }
-
-        return view('admin.vehicle.index', compact('userVehicleData'));
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\PassController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,5 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/user/passes', [UserController::class, 'userPassesListing']);
     Route::get('/user/vehicles', [UserController::class, 'userVehiclesListing']);
     Route::get('/vehicles', [VehicleController::class, 'index']);
+    Route::get('/passes', [PassController::class, 'index']);
 });
