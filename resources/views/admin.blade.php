@@ -701,6 +701,14 @@
                     </a>    
                 </li>
                 <li>
+                    <a href="{{ url('pb-admin/bookings') }}" class="{{(str_contains(url()->current(), '/pb-admin/bookings')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                        <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                        <div class="side-menu__title">
+                            Bookings
+                        </div>
+                    </a>    
+                </li>
+                <li>
                     <a href="javascript:;" class="side-menu">
                         <div class="side-menu__icon"> <i data-lucide="box"></i> </div>
                         <div class="side-menu__title">

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'perPageRecord' => 1,
+    'perPageRecord' => 5,
 ];

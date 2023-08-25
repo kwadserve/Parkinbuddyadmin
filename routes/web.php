@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\PassController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,8 @@ use App\Http\Controllers\PassController;
 |
 */
 Route::get('/clear-cache', function (){
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('view:clear');
-    Artisan::call('route:clear');
+    Artisan::call('optimize:clear');
+   
     echo "all cleared";
 });
 
@@ -43,4 +42,5 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/user/vehicles', [UserController::class, 'userVehiclesListing']);
     Route::get('/vehicles', [VehicleController::class, 'index']);
     Route::get('/passes', [PassController::class, 'index']);
+    Route::get('/bookings', [BookingController::class, 'index']);
 });
