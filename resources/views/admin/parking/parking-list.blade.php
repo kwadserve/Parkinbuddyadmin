@@ -29,8 +29,7 @@ use App\Models\ParkingPass;
                              $managerName =  User::where('id', $parking['manager_id'])->first();
                         ?>
                     <tr class="intro-x">
-                                           
-                        <td class="w-40 !py-4 whitespace-nowrap font-bold text-primary">{{$parking->name}}</td>
+                        <td class="w-40 !py-4 whitespace-nowrap font-bold text-primary"><a href="{{ url('pb-admin/parkings') }}/{{ $parking->id }}/view">{{$parking->name}}</a></td>
                         <td class="w-40 text-center font-medium whitespace-nowrap">{{$parking->city}}</td>
                         <td class="text-center"><div class="whitespace-nowrap">{{$parking->state}}</div></td>
                         <td class="text-center"><div class="whitespace-nowrap">{{$parking->address}}</div></td>

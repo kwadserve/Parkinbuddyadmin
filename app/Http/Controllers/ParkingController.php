@@ -71,6 +71,8 @@ class ParkingController extends Controller
     }
 
     public function viewDetail($id){
+        echo 'here is detail page';
+        die;
         $configPerPage = Config::get('custom.perPageRecord');
         $perPage = $configPerPage;
         // $perPage = 2;
