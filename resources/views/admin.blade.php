@@ -709,6 +709,14 @@
                     </a>    
                 </li>
                 <li>
+                    <a href="{{ url('pb-admin/parkings') }}" class="{{(str_contains(url()->current(), '/pb-admin/parkings')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                        <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                        <div class="side-menu__title">
+                            Parkings
+                        </div>
+                    </a>    
+                </li>
+                <li>
                     <a href="javascript:;" class="side-menu">
                         <div class="side-menu__icon"> <i data-lucide="box"></i> </div>
                         <div class="side-menu__title">

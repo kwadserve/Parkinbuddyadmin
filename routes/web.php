@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ParkingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,5 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/vehicles', [VehicleController::class, 'index']);
     Route::get('/passes', [PassController::class, 'index']);
     Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/parkings', [ParkingController::class, 'index']);
 });
