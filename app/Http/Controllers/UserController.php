@@ -40,10 +40,12 @@ class UserController extends Controller
         // $perPage = 2;
         $userDetails = User::where('id', $id)->first(); 
         $bookingData = Booking::where("user_id",$userDetails['id'])->paginate($perPage);
-        $userBookingCashCollection = $bookingData->sum('cash_collection');
-        $userBookingChargeCollection = $bookingData->sum('charges');
-        $userBookingCount = $bookingData->count();
-       
+        $userBookingCount = $bookingData->total();
+        
+        $allBookingData = Booking::where("user_id",$userDetails['id']);
+        $userBookingCashCollection = $allBookingData->sum('cash_collection');
+        $userBookingChargeCollection = $allBookingData->sum('charges');
+        
         $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
         ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
         ->where('user_passes.user_id', $id) 

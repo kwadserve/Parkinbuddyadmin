@@ -40,6 +40,8 @@
                             {{$userVehicle->name}}
                         @else
                             @if($userDetails && $userDetails->name != null) {{$userDetails->name}}
+                            @elseif($userDetails && $userDetails->phone != null) {{$userDetails->phone}}
+                            @elseif($userDetails && $userDetails->email != null) {{$userDetails->email}}
                             @else {{'-'}}
                             @endif
                         @endif

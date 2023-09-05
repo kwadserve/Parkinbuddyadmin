@@ -39,6 +39,8 @@
                     <td class="w-40 text-center !py-4 whitespace-nowrap text-primary">{{$userPass->title}}</td>
                     <td class="w-40 text-center font-medium whitespace-nowrap">
                         @if($userDetails && $userDetails->name != null) {{$userDetails->name}}
+                        @elseif($userDetails && $userDetails->phone != null) {{$userDetails->phone}}
+                        @elseif($userDetails && $userDetails->email != null) {{$userDetails->email}}
                         @else {{'-'}}
                         @endif
                     </td>

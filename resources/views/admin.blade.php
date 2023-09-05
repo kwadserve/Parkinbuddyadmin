@@ -16,6 +16,18 @@
 <!-- END: Head -->
 
 <body>
+    <?php 
+        use App\Models\User;
+        
+        $user = Auth::user();
+        $userData = User::with('role')->where("id",$user['id'])->first(); 
+
+        $limitedAccess = false;
+        if ($userData['role']['role'] == 'operator' || $userData['role']['role'] == 'manager') {
+            $limitedAccess = true;
+        }
+       
+    ?>
      <!-- BEGIN: Mobile Menu -->
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
@@ -676,6 +688,7 @@
                         </div>
                     </a>    
                 </li>
+                @if(!$limitedAccess)
                 <li>
                     <a href="{{ url('pb-admin/users') }}" class="{{(str_contains(url()->current(), '/pb-admin/user')) ? 'side-menu side-menu--active' : 'side-menu'}}">
                         <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
@@ -684,6 +697,7 @@
                         </div>
                     </a>    
                 </li>
+                @endif
                 <li>
                     <a href="{{ url('pb-admin/vehicles') }}" class="{{(str_contains(url()->current(), '/pb-admin/vehicles')) ? 'side-menu side-menu--active' : 'side-menu'}}">
                         <div class="side-menu__icon"> <i data-lucide="users"></i> </div>

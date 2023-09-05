@@ -29,6 +29,8 @@
             <div class="ml-5">
                 <div class="w-24 sm:w-40 truncate sm:whitespace-normal font-medium text-lg">
                     @if($userDetails && $userDetails->name != null) {{$userDetails->name}}
+                    @elseif($userDetails && $userDetails->phone != null) {{$userDetails->phone}}
+                    @elseif($userDetails && $userDetails->email != null) {{$userDetails->email}}
                     @else {{'-'}}
                     @endif
                 </div>
