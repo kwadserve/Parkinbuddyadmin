@@ -827,14 +827,6 @@ select{
     opacity: 0.7;
 }
 /* Default Sizes */
-.btn-sm{
-    padding-top: 0.375rem;
-    padding-bottom: 0.375rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    font-size: 0.75rem;
-    line-height: 1rem;
-}
 /* Button Colors */
 .btn-primary{
     --tw-border-opacity: 1;
@@ -2168,6 +2160,10 @@ select{
 .bg-primary{
     --tw-bg-opacity: 1;
     background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
+}
+.bg-slate-200{
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-slate-200) / var(--tw-bg-opacity));
 }
 .bg-success{
     --tw-bg-opacity: 1;
@@ -13589,6 +13585,9 @@ html body{
     }
     .lg\:col-span-6{
         grid-column: span 6 / span 6;
+    }
+    .lg\:col-span-8{
+        grid-column: span 8 / span 8;
     }
     .lg\:ml-2{
         margin-left: 0.5rem;

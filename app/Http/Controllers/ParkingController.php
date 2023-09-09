@@ -10,6 +10,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use App\Models\Booking;
+use App\Models\UserPass;
+use App\Models\Vehicle;
 
 class ParkingController extends Controller
 {
@@ -71,33 +74,33 @@ class ParkingController extends Controller
     }
 
     public function viewDetail($id){
-        echo 'here is detail page';
-        die;
         $configPerPage = Config::get('custom.perPageRecord');
         $perPage = $configPerPage;
         // $perPage = 2;
-        $userDetails = User::where('id', $id)->first(); 
-        $bookingData = Booking::where("user_id",$userDetails['id'])->paginate($perPage);
-        $userBookingCashCollection = $bookingData->sum('cash_collection');
-        $userBookingChargeCollection = $bookingData->sum('charges');
-        $userBookingCount = $bookingData->count();
+        $parkingDetails = Parking::where('id', $id)->first(); 
+        $bookingData = Booking::where("parking_id",$parkingDetails['id'])->paginate($perPage);
+        $userBookingCount = $bookingData->total();
        
-        $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
-        ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
-        ->where('user_passes.user_id', $id) 
-        ->paginate($perPage);
+        $allBookingData = Booking::where("parking_id",$parkingDetails['id']);
+        $userBookingCashCollection = $allBookingData->sum('cash_collection');
+        $userBookingChargeCollection = $allBookingData->sum('charges');
+       
+        // $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
+        // ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
+        // ->where('user_passes.user_id', $id) 
+        // ->paginate($perPage);
 
-        $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
+        // $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
         // $userVehicleData = array();
-        return view('admin.user.detail', compact('userDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','userVehicleData'));
+        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData'));
     }
 
-    public function userBookingListing(Request $request){
+    public function parkingBookingListing(Request $request){
         $configPerPage = Config::get('custom.perPageRecord');
         $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
         // $perPage = 2;
         $bookingData = Booking::query()
-                        ->where("user_id",$request->userProfileId)
+                        ->where("parking_id",$request->parkingProfileId)
                         ->when($request->filled('userBookStatus'), function ($query) use ($request) {
                             return $query->where('status', $request->userBookStatus);
                         })
@@ -105,7 +108,7 @@ class ParkingController extends Controller
                             $q->where('booking_id', 'like', '%'.$request->seach_term.'%');
                         })
                         ->paginate($perPage);
-            return view('admin.user.booking-list', compact('bookingData'))->render();
+            return view('admin.parking.booking-list', compact('bookingData'))->render();
     }
 
     public function userPassesListing(Request $request){
@@ -129,21 +132,4 @@ class ParkingController extends Controller
         return view('admin.user.pass-list', compact('userPassData'))->render();
     }
 
-    public function userVehiclesListing(Request $request){
-        $configPerPage = Config::get('custom.perPageRecord');
-        $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
-        $searchKey = $request->input('seach_term');
-        $userProfileId = $request->input('userProfileId');
-        
-        $query  = Vehicle::where("user_id",$userProfileId);
-        
-        if ($searchKey) {
-            $query->where(function ($subquery) use ($searchKey) {
-                $subquery->where('number', 'like', '%' . $searchKey . '%');
-            });
-        }
-
-        $userVehicleData = $query->paginate($perPage);
-        return view('admin.user.vehicle-list', compact('userVehicleData'))->render();
-    }
 }

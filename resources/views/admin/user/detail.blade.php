@@ -112,26 +112,26 @@
     </div>
     <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
        <!-- BEGIN: passes -->
-    <div class="">
-        <input type="hidden" id="passPageNumber" value="1" />
-        <div class="grid grid-cols-12 gap-6 mt-5">
-            <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2">
-                <div class="flex w-full sm:w-auto">
-                    <div class="w-48 relative text-slate-500">
-                        <input type="text" id="userPassSearch" class="form-control w-48 box pr-10" placeholder="Search by Pass Name">
-                        <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i> 
-                    </div>    
-                </div>
-                <div class="hidden xl:block mx-auto text-slate-500"></div>
-                <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
-                    <button class="btn btn-primary shadow-md mr-2"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel </button>
+        <div class="">
+            <input type="hidden" id="passPageNumber" value="1" />
+            <div class="grid grid-cols-12 gap-6 mt-5">
+                <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2">
+                    <div class="flex w-full sm:w-auto">
+                        <div class="w-48 relative text-slate-500">
+                            <input type="text" id="userPassSearch" class="form-control w-48 box pr-10" placeholder="Search by Pass Name">
+                            <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i> 
+                        </div>    
+                    </div>
+                    <div class="hidden xl:block mx-auto text-slate-500"></div>
+                    <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel </button>
+                    </div>
                 </div>
             </div>
+            <div class="pass-list-container" id="pass-list-container">
+                @include('admin.user.pass-list')
+            </div>
         </div>
-        <div class="pass-list-container" id="pass-list-container">
-            @include('admin.user.pass-list')
-        </div>
-    </div>
        <!-- END: passes -->
     </div>
     <div id="example-tab-5" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
