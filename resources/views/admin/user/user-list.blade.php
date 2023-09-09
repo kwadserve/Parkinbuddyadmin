@@ -19,7 +19,7 @@
         </div>
     </div>
 @endforeach
-<div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
+<div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" id="userList">
 {!! $users->links('vendor.pagination.custom') !!}
 </div>
 @else

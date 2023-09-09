@@ -42,10 +42,10 @@
         
     $(document).ready(function() {
 
-        const loadUsers = (page,search_term) => {
+        const loadUsers = (page,search_term,perpage) => {
             $.ajax({ 
                 method: 'GET',
-                url:`${baseurl}/pb-admin/users?page=${page}&seach_term=${search_term}`,
+                url:`${baseurl}/pb-admin/users?page=${page}&seach_term=${search_term}&perpage=${perpage}`,
                 success:function(response){
                     $('#users-list-container').html('');
                     $('#users-list-container').html(response);
@@ -55,7 +55,7 @@
 
         $(document).on('keyup', '#userSearch', function(){
             var seach_term = $('#userSearch').val();
-            loadUsers(1,seach_term);
+            loadUsers(1,seach_term,0);
         });
 
         $(document).on('click', '.pagination a', function(event) {
@@ -63,8 +63,14 @@
             let page = $(this).attr('href').split('page=')[1];
             $("#pageNumber").val(page);
             var search_term = $('#userSearch').val();
-            loadUsers(page,search_term);
+            loadUsers(page,search_term,0);
         });  
+
+        $(document).on('change', '#userList select.perPageSelectBox', function(event) {
+            let perpage = $(this).val(); 
+            let search_term = $('#userSearch').val();
+            loadUsers(1,search_term,perpage);
+        });
     });
     
     // Handle pagination links click event

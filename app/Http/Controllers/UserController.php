@@ -16,9 +16,9 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        // $configPerPage = Config::get('custom.perPageRecord');
-        // $perPage = $configPerPage;
-        $perPage = 10;
+        $configPerPage = Config::get('custom.perPageRecord');
+        $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
+        // $perPage = 10;
         $users = User::paginate($perPage); // Adjust the number per page as needed
 
         if($request->ajax()){
