@@ -23,6 +23,7 @@
     </h2>
 </div>
 <input type="hidden" id="parkingProfileId" value="{{$parkingDetails->id}}" />
+<input type="hidden" id="parkingUserId" value="{{$parkingDetails->user_id}}" />
 <!-- BEGIN: Official Store -->
 <div class="col-span-12 lg:col-span-8 mt-6">
     <div class="intro-y box p-5 mt-12 sm:mt-5">
@@ -372,6 +373,30 @@
         </div>
         <!-- END: bookings -->        
     </div>
+    <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
+       <!-- BEGIN: passes -->
+        <div class="">
+            <input type="hidden" id="passPageNumber" value="1" />
+            <div class="grid grid-cols-12 gap-6 mt-5">
+                <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2">
+                    <div class="flex w-full sm:w-auto">
+                        <div class="w-48 relative text-slate-500">
+                            <input type="text" id="userPassSearch" class="form-control w-48 box pr-10" placeholder="Search by Pass Name">
+                            <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i> 
+                        </div>    
+                    </div>
+                    <div class="hidden xl:block mx-auto text-slate-500"></div>
+                    <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
+                        <button class="btn btn-primary shadow-md mr-2" style="display:none;"> <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel </button>
+                    </div>
+                </div>
+            </div>
+            <div class="pass-list-container" id="pass-list-container">
+                @include('admin.parking.pass-list')
+            </div>
+        </div>
+       <!-- END: passes -->
+    </div>
 </div>
 <!-- END: Profile Info -->
 <!-- END: Main Content -->
@@ -381,7 +406,8 @@
 <script>
     let baseurl = $('#mainUrl').val();
     let parkingProfileId= $("#parkingProfileId").val();
-    
+    let parkingUserId = $("#parkingUserId").val();
+
     $(document).ready(function() {
 
         //=====================booking listing start===============
@@ -423,6 +449,37 @@
         });
         //================booking listing end===================
         
+        //==========================user pass listing start=================
+        const loadParkingUserPasses = (page,search_term,perpage) => {
+            $.ajax({ 
+                method: 'GET',
+                url:`${baseurl}/pb-admin/parking/passes?page=${page}&seach_term=${search_term}&parkingUserId=${parkingUserId}&perpage=${perpage}`,
+                success:function(response){
+                    // $('#pass-list-container').html('');
+                    $('#pass-list-container').html(response);
+                }
+            })
+        }
+
+        $(document).on('keyup', '#userPassSearch', function(){
+            var search_term = $('#userPassSearch').val();
+            loadParkingUserPasses(1,search_term,0);
+        });
+
+        $(document).on('click', '#example-tab-4 .pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            $("#passPageNumber").val(page);
+            var search_term = $('#userPassSearch').val();
+            loadParkingUserPasses(page,search_term,0);
+        });
+
+        $(document).on('change', '#parkingUserPasses select.perPageSelectBox', function(event) {
+            let perpage = $(this).val();
+            let search_term = $('#userPassSearch').val();
+            loadParkingUserPasses(1,search_term,perpage);
+        });
+        //================user pass listing end=================================
     }); 
 </script>
 @endsection

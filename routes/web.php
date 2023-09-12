@@ -47,4 +47,5 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/parkings', [ParkingController::class, 'index']);
     Route::get('/parkings/{id}/view', [ParkingController::class, 'viewDetail']);
     Route::get('/parking/bookings', [ParkingController::class, 'parkingBookingListing']);
+    Route::get('/parking/passes', [ParkingController::class, 'parkingUserPassesListing']);
 });

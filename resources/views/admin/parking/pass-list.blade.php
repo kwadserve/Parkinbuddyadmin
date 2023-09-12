@@ -39,6 +39,8 @@
                     <td class="w-40 text-center !py-4 whitespace-nowrap text-primary">{{$userPass->title}}</td>
                     <td class="w-40 text-center font-medium whitespace-nowrap">
                         @if($userDetails && $userDetails->name != null) {{$userDetails->name}}
+                        @elseif($userDetails && $userDetails->phone != null) {{$userDetails->phone}}
+                        @elseif($userDetails && $userDetails->email != null) {{$userDetails->email}}
                         @else {{'-'}}
                         @endif
                     </td>
@@ -73,7 +75,7 @@
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
     @if($userPassData && $userPassData->count() > 0)
-    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" id="userPasses">
+    <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" id="parkingUserPasses">
         {!! $userPassData->links('vendor.pagination.custom') !!}
     </div>
     @endif

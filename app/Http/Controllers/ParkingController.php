@@ -85,14 +85,14 @@ class ParkingController extends Controller
         $userBookingCashCollection = $allBookingData->sum('cash_collection');
         $userBookingChargeCollection = $allBookingData->sum('charges');
        
-        // $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
-        // ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
-        // ->where('user_passes.user_id', $id) 
-        // ->paginate($perPage);
+        $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
+        ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
+        ->where('user_passes.user_id', $parkingDetails['user_id']) 
+        ->paginate($perPage);
 
         // $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
         // $userVehicleData = array();
-        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData'));
+        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData'));
     }
 
     public function parkingBookingListing(Request $request){
@@ -111,15 +111,15 @@ class ParkingController extends Controller
             return view('admin.parking.booking-list', compact('bookingData'))->render();
     }
 
-    public function userPassesListing(Request $request){
+    public function parkingUserPassesListing(Request $request){
         $configPerPage = Config::get('custom.perPageRecord');
         $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
         $searchKey = $request->input('seach_term');
-        $userProfileId = $request->input('userProfileId');
+        $parkingUserId = $request->input('parkingUserId');
         
         $query  = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
         ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
-        ->where('user_passes.user_id', $userProfileId);
+        ->where('user_passes.user_id', $parkingUserId);
         
         if ($searchKey) {
             $query->where(function ($subquery) use ($searchKey) {
@@ -129,7 +129,7 @@ class ParkingController extends Controller
 
         $userPassData = $query->paginate($perPage);
 
-        return view('admin.user.pass-list', compact('userPassData'))->render();
+        return view('admin.parking.pass-list', compact('userPassData'))->render();
     }
 
 }
