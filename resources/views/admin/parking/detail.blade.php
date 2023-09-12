@@ -343,7 +343,7 @@
         </div>
         <!-- END: Content -->
     </div>
-    <div id="example-tab-3" class="tab-pane leading-relaxed active" role="tabpanel" aria-labelledby="example-3-tab">
+    <div id="example-tab-3" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-3-tab">
         <!-- BEGIN: bookings -->
         <div class="">
             <input type="hidden" id="bookPageNumber" value="1" />
