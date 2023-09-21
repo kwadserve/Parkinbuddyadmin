@@ -24,6 +24,8 @@
 </div>
 <input type="hidden" id="parkingProfileId" value="{{$parkingDetails->id}}" />
 <input type="hidden" id="parkingUserId" value="{{$parkingDetails->user_id}}" />
+<input type="hidden" id="salesReportFeed1" value=<?=json_encode($salesReportFeed1); ?> />
+<input type="hidden" id="salesReportFeed2" value=<?=json_encode($salesReportFeed2); ?> />
 <!-- BEGIN: Official Store -->
 <div class="col-span-12 lg:col-span-8 mt-6">
     <div class="intro-y box p-5 mt-12 sm:mt-5">
@@ -113,10 +115,14 @@
                                         <div class="flex">
                                             <i data-lucide="shopping-cart" class="report-box__icon text-primary"></i> 
                                             <div class="ml-auto">
-                                                <div class="report-box__indicator bg-success tooltip cursor-pointer" title="33% Higher than last month"> 33% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @if($totalSalesIsHigher)
+                                                    <div class="report-box__indicator bg-success tooltip cursor-pointer" title="{{$totalSalesGrowth}}% Higher than last month"> {{$totalSalesGrowth}}% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @else
+                                                    <div class="report-box__indicator bg-danger tooltip cursor-pointer" title="{{$totalSalesGrowth}}% Lower than last month"> {{$totalSalesGrowth}}% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @endif
                                             </div>
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">4.710</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{$totalSales}}</div>
                                         <div class="text-base text-slate-500 mt-1">Total Sales</div>
                                     </div>
                                 </div>
@@ -127,10 +133,14 @@
                                         <div class="flex">
                                             <i data-lucide="credit-card" class="report-box__icon text-pending"></i> 
                                             <div class="ml-auto">
-                                                <div class="report-box__indicator bg-danger tooltip cursor-pointer" title="2% Lower than last month"> 2% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @if($totalParkingGrowthIsHigher)
+                                                    <div class="report-box__indicator bg-success tooltip cursor-pointer" title="{{$totalParkingGrowth}}% Higher than last month"> {{$totalParkingGrowth}}% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @else
+                                                    <div class="report-box__indicator bg-danger tooltip cursor-pointer" title="{{$totalParkingGrowth}}% Lower than last month"> {{$totalParkingGrowth}}% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @endif
                                             </div>
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">3.721</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{$totalParkingBookings}}</div>
                                         <div class="text-base text-slate-500 mt-1">Total Parking Bookings</div>
                                     </div>
                                 </div>
@@ -307,13 +317,13 @@
                                 <div class="flex items-center">
                                     <div class="w-2/4 flex-none">
                                         <div class="text-lg font-medium truncate">Total Parkings</div>
-                                        <div class="text-slate-500 mt-1">25</div>
+                                        <div class="text-slate-500 mt-1">{{$totalParkingsCount}}</div>
                                     </div>
                                     <div class="flex-none ml-auto relative">
                                         <div class="w-[90px] h-[90px]">
                                             <canvas id="report-donut-chart-1"></canvas>
                                         </div>
-                                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">25</div>
+                                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">{{$totalParkingsCount}}</div>
                                     </div>
                                 </div>
                             </div>

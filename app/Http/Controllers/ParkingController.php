@@ -13,6 +13,7 @@ use DB;
 use App\Models\Booking;
 use App\Models\UserPass;
 use App\Models\Vehicle;
+use Carbon\Carbon;
 
 class ParkingController extends Controller
 {
@@ -90,9 +91,43 @@ class ParkingController extends Controller
         ->where('user_passes.user_id', $parkingDetails['user_id']) 
         ->paginate($perPage);
 
+        $totalParkingsCount = Parking::all()->count();
+       
+        // Get the current month sales
+        $currentDate = Carbon::now();
+        $firstDayOfMonth = $currentDate->firstOfMonth()->toDateTimeString();
+        $lastDayOfMonth = $currentDate->lastOfMonth()->endOfDay()->toDateTimeString();
+      
+        $graphTotalBookingsOfMonth = $this->calculateLastMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth);
+        $totalSales = $graphTotalBookingsOfMonth['totalSales'];
+        $totalParkingBookings = $graphTotalBookingsOfMonth['totalParkingBookings'];
+       
+        // Get the current month sales end
+        //get previous month sales here
+        $lastMonthFirstDay = $currentDate->subMonthNoOverflow()->firstOfMonth()->toDateTimeString();
+        $currentDateCalc = Carbon::now();
+        $lastMonthLastDay = $currentDateCalc->subMonthNoOverflow()->lastOfMonth()->endOfDay()->toDateTimeString();
+        
+        $graphTotalBookingsOfLastMonth = $this->calculateLastMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay);
+        $totalSalesLastMonth = $graphTotalBookingsOfLastMonth['totalSales'];
+        $totalParkingBookingsLastMonth = $graphTotalBookingsOfLastMonth['totalParkingBookings'];
+        // get previous month sales end
+        
+        $salesGrowth = $this->growthCalculator($totalSales,$totalSalesLastMonth);
+        $totalSalesGrowth = $salesGrowth['growth'];
+        $totalSalesIsHigher = $salesGrowth['isHigher'];
+        
+        $totalParkingGrowthData = $this->growthCalculator($totalParkingBookings,$totalParkingBookingsLastMonth);
+        $totalParkingGrowth = $totalParkingGrowthData['growth'];
+        $totalParkingGrowthIsHigher = $totalParkingGrowthData['isHigher'];
+
+        $salesReportFeed1= array( 0, 200, 250, 200, 700, 550, 650, 1050, 950, 1100,
+        900, 1200,);
+        $salesReportFeed2= array( 0, 300, 400, 560, 320, 600, 720, 850, 690, 805,
+        1200, 1010,);
         // $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
         // $userVehicleData = array();
-        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData'));
+        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','salesReportFeed1','salesReportFeed2','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher'));
     }
 
     public function parkingBookingListing(Request $request){
@@ -132,4 +167,38 @@ class ParkingController extends Controller
         return view('admin.parking.pass-list', compact('userPassData'))->render();
     }
 
+    public function calculateLastMonthSale($parkingId,$startdate,$enddate) {
+        
+        $graphTotalBookingsOfMonth = Booking::where('parking_id',$parkingId)->whereBetween('created_at', [$startdate, $enddate])->get();
+        
+        $totalParkingBookings = count($graphTotalBookingsOfMonth);
+        $totalSales = 0;
+        foreach ($graphTotalBookingsOfMonth as $bookingKey => $bookingValue) {
+            $totalSales += $bookingValue['charges'] + $bookingValue['cash_collection'];
+        }
+        
+        $response = array(
+            'totalSales' => $totalSales,
+            'totalParkingBookings' => $totalParkingBookings
+        );
+        return $response;
+    }
+
+    public function growthCalculator($currentMonth,$previousMonth)
+    {
+        $isPlusOrMinus = $currentMonth - $previousMonth;
+        $devideByPrevious = $isPlusOrMinus/$previousMonth;
+        $growthRate = $devideByPrevious * 100;
+        
+        $isHigher = true;
+        if($isPlusOrMinus < 0){ //if decrement
+            $isHigher = false;
+        }
+
+        $response = array (
+            'growth' =>  explode('.', abs(round($growthRate,0)))[0],
+            'isHigher' => $isHigher
+        );
+        return $response;
+    }
 }
