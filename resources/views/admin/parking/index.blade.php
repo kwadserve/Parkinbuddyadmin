@@ -29,7 +29,7 @@
                 </div>
                 <div class="hidden xl:block mx-auto text-slate-500"></div>
                 <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-                    <button class="btn btn-primary shadow-md mr-2"> 
+                    <button class="btn btn-primary shadow-md mr-2" style="display:none;"> 
                         <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export to Excel 
                     </button>
                     <div class="dropdown ml-auto sm:ml-0">
