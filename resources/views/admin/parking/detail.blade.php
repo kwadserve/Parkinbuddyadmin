@@ -134,7 +134,7 @@
                                             <i data-lucide="credit-card" class="report-box__icon text-pending"></i> 
                                             <div class="ml-auto">
                                                 @if($totalParkingGrowthIsHigher)
-                                                    <div class="report-box__indicator bg-success tooltip cursor-pointer" title="{{$totalParkingGrowth}}% Higher than last month"> {{$totalParkingGrowth}}% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                    <div class="report-box__indicator bg-success tooltip cursor-pointer" title="{{$totalParkingGrowth}}% Higher than last month"> {{$totalParkingGrowth}}% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
                                                 @else
                                                     <div class="report-box__indicator bg-danger tooltip cursor-pointer" title="{{$totalParkingGrowth}}% Lower than last month"> {{$totalParkingGrowth}}% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
                                                 @endif
@@ -151,10 +151,14 @@
                                         <div class="flex">
                                             <i data-lucide="monitor" class="report-box__icon text-warning"></i> 
                                             <div class="ml-auto">
-                                                <div class="report-box__indicator bg-success tooltip cursor-pointer" title="12% Higher than last month"> 12% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @if($totalPassSoldGrowthIsHigher)
+                                                    <div class="report-box__indicator bg-success tooltip cursor-pointer" title="{{$totalPassSoldGrowth}}% Higher than last month"> {{$totalPassSoldGrowth}}% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @else
+                                                    <div class="report-box__indicator bg-danger tooltip cursor-pointer" title="{{$totalPassSoldGrowth}}% Higher than last month"> {{$totalPassSoldGrowth}}% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i> </div>
+                                                @endif
                                             </div>
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">2.149</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{$totalPassSold}}</div>
                                         <div class="text-base text-slate-500 mt-1">Total Passes Sold</div>
                                     </div>
                                 </div>

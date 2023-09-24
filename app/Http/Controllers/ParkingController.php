@@ -14,6 +14,7 @@ use App\Models\Booking;
 use App\Models\UserPass;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use App\Models\ParkingPass;
 
 class ParkingController extends Controller
 {
@@ -86,33 +87,33 @@ class ParkingController extends Controller
         $userBookingCashCollection = $allBookingData->sum('cash_collection');
         $userBookingChargeCollection = $allBookingData->sum('charges');
        
+        $parkingAssignPass = ParkingPass::where("parking_id",$parkingDetails['id'])->pluck('pass_id')->first();
+
         $userPassData = UserPass::select('user_passes.*', 'passes.code as code', 'passes.title as title','passes.vehicle_type as vehicle_type','passes.expiry_time as expiry_time','passes.amount as amount','passes.total_hours as total_hours')
         ->join('passes', 'user_passes.pass_id', '=', 'passes.id')
-        ->where('user_passes.user_id', $parkingDetails['user_id']) 
+        ->where('user_passes.pass_id', $parkingAssignPass) 
         ->paginate($perPage);
 
         $totalParkingsCount = Parking::all()->count();
        
-        // Get the current month sales
+        // Get the current total sales and total parking calc
         $currentDate = Carbon::now();
         $firstDayOfMonth = $currentDate->firstOfMonth()->toDateTimeString();
         $lastDayOfMonth = $currentDate->lastOfMonth()->endOfDay()->toDateTimeString();
       
-        $graphTotalBookingsOfMonth = $this->calculateLastMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth);
+        $graphTotalBookingsOfMonth = $this->calculateMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth);
         $totalSales = $graphTotalBookingsOfMonth['totalSales'];
         $totalParkingBookings = $graphTotalBookingsOfMonth['totalParkingBookings'];
        
-        // Get the current month sales end
-        //get previous month sales here
+        
         $lastMonthFirstDay = $currentDate->subMonthNoOverflow()->firstOfMonth()->toDateTimeString();
         $currentDateCalc = Carbon::now();
         $lastMonthLastDay = $currentDateCalc->subMonthNoOverflow()->lastOfMonth()->endOfDay()->toDateTimeString();
         
-        $graphTotalBookingsOfLastMonth = $this->calculateLastMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay);
+        $graphTotalBookingsOfLastMonth = $this->calculateMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay);
         $totalSalesLastMonth = $graphTotalBookingsOfLastMonth['totalSales'];
         $totalParkingBookingsLastMonth = $graphTotalBookingsOfLastMonth['totalParkingBookings'];
-        // get previous month sales end
-        
+                
         $salesGrowth = $this->growthCalculator($totalSales,$totalSalesLastMonth);
         $totalSalesGrowth = $salesGrowth['growth'];
         $totalSalesIsHigher = $salesGrowth['isHigher'];
@@ -120,14 +121,26 @@ class ParkingController extends Controller
         $totalParkingGrowthData = $this->growthCalculator($totalParkingBookings,$totalParkingBookingsLastMonth);
         $totalParkingGrowth = $totalParkingGrowthData['growth'];
         $totalParkingGrowthIsHigher = $totalParkingGrowthData['isHigher'];
+        // Get the current total sales and total parking calc
 
+        //total pass sold calc
+        $getSoldPassData = $this->calculateMonthSoldPass($parkingAssignPass,$firstDayOfMonth,$lastDayOfMonth);
+        $totalPassSold = $getSoldPassData['total'];
+        
+        $getSoldPassDataOfLastMonth = $this->calculateMonthSoldPass($parkingAssignPass,$lastMonthFirstDay,$lastMonthLastDay);
+        $totalPassSoldLastMonth = $getSoldPassDataOfLastMonth['total'];
+        
+        $totalPassSoldGrowthData = $this->growthCalculator($totalPassSold,$totalPassSoldLastMonth);
+        $totalPassSoldGrowth = $totalPassSoldGrowthData['growth'];
+        $totalPassSoldGrowthIsHigher = $totalPassSoldGrowthData['isHigher'];
+        //total pass sold calc
         $salesReportFeed1= array( 0, 200, 250, 200, 700, 550, 650, 1050, 950, 1100,
         900, 1200,);
         $salesReportFeed2= array( 0, 300, 400, 560, 320, 600, 720, 850, 690, 805,
         1200, 1010,);
         // $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
         // $userVehicleData = array();
-        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','salesReportFeed1','salesReportFeed2','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher'));
+        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','salesReportFeed1','salesReportFeed2','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher','totalPassSold','totalPassSoldGrowthIsHigher','totalPassSoldGrowth'));
     }
 
     public function parkingBookingListing(Request $request){
@@ -167,7 +180,7 @@ class ParkingController extends Controller
         return view('admin.parking.pass-list', compact('userPassData'))->render();
     }
 
-    public function calculateLastMonthSale($parkingId,$startdate,$enddate) {
+    public function calculateMonthSale($parkingId,$startdate,$enddate) {
         
         $graphTotalBookingsOfMonth = Booking::where('parking_id',$parkingId)->whereBetween('created_at', [$startdate, $enddate])->get();
         
@@ -198,6 +211,17 @@ class ParkingController extends Controller
         $response = array (
             'growth' =>  explode('.', abs(round($growthRate,0)))[0],
             'isHigher' => $isHigher
+        );
+        return $response;
+    }
+
+    public function calculateMonthSoldPass($parkingAssignPass,$startdate,$enddate){
+        $parkingUserPassData = UserPass::where('pass_id', $parkingAssignPass) 
+        ->whereBetween('created_at', [$startdate, $enddate])
+        ->get();
+
+        $response = array(
+            'total' => count($parkingUserPassData)
         );
         return $response;
     }
