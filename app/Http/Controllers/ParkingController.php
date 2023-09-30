@@ -15,6 +15,7 @@ use App\Models\UserPass;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use App\Models\ParkingPass;
+use App\Models\Refund;
 
 class ParkingController extends Controller
 {
@@ -101,19 +102,19 @@ class ParkingController extends Controller
         $firstDayOfMonth = $currentDate->firstOfMonth()->toDateTimeString();
         $lastDayOfMonth = $currentDate->lastOfMonth()->endOfDay()->toDateTimeString();
       
-        $graphTotalBookingsOfMonth = $this->calculateMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth);
+        $graphTotalBookingsOfMonth = $this->calculateMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth,true);
         $totalSales = $graphTotalBookingsOfMonth['totalSales'];
         $totalParkingBookings = $graphTotalBookingsOfMonth['totalParkingBookings'];
-       
-        
+        $totalRefundRaised = $graphTotalBookingsOfMonth['totalRefundRaised'] ?? 0;
+
         $lastMonthFirstDay = $currentDate->subMonthNoOverflow()->firstOfMonth()->toDateTimeString();
         $currentDateCalc = Carbon::now();
         $lastMonthLastDay = $currentDateCalc->subMonthNoOverflow()->lastOfMonth()->endOfDay()->toDateTimeString();
         
-        $graphTotalBookingsOfLastMonth = $this->calculateMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay);
+        $graphTotalBookingsOfLastMonth = $this->calculateMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay,false);
         $totalSalesLastMonth = $graphTotalBookingsOfLastMonth['totalSales'];
         $totalParkingBookingsLastMonth = $graphTotalBookingsOfLastMonth['totalParkingBookings'];
-                
+       
         $salesGrowth = $this->growthCalculator($totalSales,$totalSalesLastMonth);
         $totalSalesGrowth = $salesGrowth['growth'];
         $totalSalesIsHigher = $salesGrowth['isHigher'];
@@ -134,13 +135,24 @@ class ParkingController extends Controller
         $totalPassSoldGrowth = $totalPassSoldGrowthData['growth'];
         $totalPassSoldGrowthIsHigher = $totalPassSoldGrowthData['isHigher'];
         //total pass sold calc
+
+        //sales report
+        // $currentMonthBookings = $allBookingData->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->get();
+        
+        //sales report
+
+        //vehicle sale graph
+        $vechicleGraphSales = $this->calculateVechicleSales($graphTotalBookingsOfMonth['fourWheelerCount'], $graphTotalBookingsOfMonth['twoWheelerCount']);
+        $vechicleSalesGraphFeed = array($vechicleGraphSales['fourWheelerSold'],$vechicleGraphSales['twoWheelerSold']);
+        //vehicle sale graph
+
         $salesReportFeed1= array( 0, 200, 250, 200, 700, 550, 650, 1050, 950, 1100,
         900, 1200,);
         $salesReportFeed2= array( 0, 300, 400, 560, 320, 600, 720, 850, 690, 805,
         1200, 1010,);
         // $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
         // $userVehicleData = array();
-        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','salesReportFeed1','salesReportFeed2','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher','totalPassSold','totalPassSoldGrowthIsHigher','totalPassSoldGrowth'));
+        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','salesReportFeed1','salesReportFeed2','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher','totalPassSold','totalPassSoldGrowthIsHigher','totalPassSoldGrowth','totalSalesLastMonth','totalRefundRaised','vechicleGraphSales','vechicleSalesGraphFeed'));
     }
 
     public function parkingBookingListing(Request $request){
@@ -180,13 +192,22 @@ class ParkingController extends Controller
         return view('admin.parking.pass-list', compact('userPassData'))->render();
     }
 
-    public function calculateMonthSale($parkingId,$startdate,$enddate) {
+    public function calculateMonthSale($parkingId,$startdate,$enddate,$iscurrentMonth) {
         
         $graphTotalBookingsOfMonth = Booking::where('parking_id',$parkingId)->whereBetween('created_at', [$startdate, $enddate])->get();
-        
+
         $totalParkingBookings = count($graphTotalBookingsOfMonth);
         $totalSales = 0;
+        $bookingIds = array();
+        $fourWheelerCount = 0;
+        $twoWheelerCount = 0;
+
         foreach ($graphTotalBookingsOfMonth as $bookingKey => $bookingValue) {
+            $bookingIds[] = $bookingValue['id'];
+            if($bookingValue['vehicle_type'] == 1)
+                $fourWheelerCount++;
+            else
+                $twoWheelerCount++;
             $totalSales += $bookingValue['charges'] + $bookingValue['cash_collection'];
         }
         
@@ -194,6 +215,16 @@ class ParkingController extends Controller
             'totalSales' => $totalSales,
             'totalParkingBookings' => $totalParkingBookings
         );
+
+        if($iscurrentMonth){
+            $getRefundRaisedData = Refund::where('status',0)->whereIn('booking_id', $bookingIds)->count();
+            $response['totalRefundRaised'] = $getRefundRaisedData;
+            $response['fourWheelerCount'] = $fourWheelerCount;
+            $response['twoWheelerCount'] = $twoWheelerCount;
+
+
+        }
+
         return $response;
     }
 
@@ -222,6 +253,19 @@ class ParkingController extends Controller
 
         $response = array(
             'total' => count($parkingUserPassData)
+        );
+        return $response;
+    }
+
+    public function calculateVechicleSales($fourWheeler,$twoWheeler){
+        $totalUnitsSold = $fourWheeler+$twoWheeler;
+        $percentageFourWheelerSold = round(($fourWheeler / $totalUnitsSold) * 100);
+        $percentageTwoWheelerSold = round(($twoWheeler / $totalUnitsSold) * 100);
+        $response = array(
+            'fourWheelerCount' => $fourWheeler,
+            'fourWheelerSold' => (int) $percentageFourWheelerSold,
+            'twoWheelerCount' => $twoWheeler,
+            'twoWheelerSold' => (int) $percentageTwoWheelerSold,
         );
         return $response;
     }

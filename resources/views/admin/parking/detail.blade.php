@@ -26,6 +26,7 @@
 <input type="hidden" id="parkingUserId" value="{{$parkingDetails->user_id}}" />
 <input type="hidden" id="salesReportFeed1" value=<?=json_encode($salesReportFeed1); ?> />
 <input type="hidden" id="salesReportFeed2" value=<?=json_encode($salesReportFeed2); ?> />
+<input type="hidden" id="vechicleSalesGraphFeed" value=<?=json_encode($vechicleSalesGraphFeed); ?> />
 <!-- BEGIN: Official Store -->
 <div class="col-span-12 lg:col-span-8 mt-6">
     <div class="intro-y box p-5 mt-12 sm:mt-5">
@@ -186,7 +187,7 @@
                             <h2 class="text-lg font-medium truncate mr-5">
                                 Sales Report
                             </h2>
-                            <div class="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500">
+                            <div class="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500" style="display:none;">
                                 <i data-lucide="calendar" class="w-4 h-4 z-10 absolute my-auto inset-y-0 ml-3 left-0"></i> 
                                 <input type="text" class="datepicker form-control sm:w-56 box pl-10">
                             </div>
@@ -195,12 +196,12 @@
                             <div class="flex flex-col md:flex-row md:items-center">
                                 <div class="flex">
                                     <div>
-                                        <div class="text-primary dark:text-slate-300 text-lg xl:text-xl font-medium">15,000</div>
+                                        <div class="text-primary dark:text-slate-300 text-lg xl:text-xl font-medium">{{$totalSales}}</div>
                                         <div class="mt-0.5 text-slate-500">This Month</div>
                                     </div>
                                     <div class="w-px h-12 border border-r border-dashed border-slate-200 dark:border-darkmode-300 mx-4 xl:mx-5"></div>
                                     <div>
-                                        <div class="text-slate-500 text-lg xl:text-xl font-medium">10,000</div>
+                                        <div class="text-slate-500 text-lg xl:text-xl font-medium">{{$totalSalesLastMonth}}</div>
                                         <div class="mt-0.5 text-slate-500">Last Month</div>
                                     </div>
                                 </div>
@@ -231,15 +232,11 @@
                             <div class="w-52 sm:w-auto mx-auto mt-8">
                                 <div class="flex items-center">
                                     <div class="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                                    <span class="truncate">4 - Wheeler</span> <span class="font-medium ml-auto">62%</span> 
+                                    <span class="truncate">4 - Wheeler</span> <span class="font-medium ml-auto">{{$vechicleGraphSales['fourWheelerSold']}}%</span> 
                                 </div>
                                 <div class="flex items-center mt-4">
                                     <div class="w-2 h-2 bg-pending rounded-full mr-3"></div>
-                                    <span class="truncate">2 - Wheeler</span> <span class="font-medium ml-auto">33%</span> 
-                                </div>
-                                <div class="flex items-center mt-4">
-                                    <div class="w-2 h-2 bg-warning rounded-full mr-3"></div>
-                                    <span class="truncate">Other</span> <span class="font-medium ml-auto">10%</span> 
+                                    <span class="truncate">2 - Wheeler</span> <span class="font-medium ml-auto">{{$vechicleGraphSales['twoWheelerSold']}}%</span> 
                                 </div>
                             </div>
                         </div>
@@ -337,13 +334,13 @@
                                 <div class="flex items-center">
                                     <div class="w-2/4 flex-none">
                                         <div class="text-lg font-medium truncate">Refunds Raised</div>
-                                        <div class="text-slate-500 mt-1">50</div>
+                                        <div class="text-slate-500 mt-1">{{$totalRefundRaised}}</div>
                                     </div>
                                     <div class="flex-none ml-auto relative">
                                         <div class="w-[90px] h-[90px]">
                                             <canvas id="report-donut-chart-2"></canvas>
                                         </div>
-                                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">50</div>
+                                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">{{$totalRefundRaised}}</div>
                                     </div>
                                 </div>
                             </div>

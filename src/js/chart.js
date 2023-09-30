@@ -99,27 +99,26 @@ import Chart from "chart.js/auto";
     }
 
     if ($("#report-pie-chart").length) {
+        let vechicleSalesGraphFeed = $("#vechicleSalesGraphFeed").val();
+       
         let ctx = $("#report-pie-chart")[0].getContext("2d");
         let myPieChart = new Chart(ctx, {
             type: "pie",
             data: {
                 labels: [
-                    "31 - 50 Years old",
-                    ">= 50 Years old",
-                    "17 - 30 Years old",
+                    " 4-Wheeler in percentage",
+                    " 2-Wheeler in percentage",                    
                 ],
                 datasets: [
                     {
-                        data: [15, 10, 65],
+                        data: JSON.parse(vechicleSalesGraphFeed),
                         backgroundColor: [
-                            colors.pending(0.9),
-                            colors.warning(0.9),
                             colors.primary(0.9),
+                            colors.pending(0.9),
                         ],
                         hoverBackgroundColor: [
-                            colors.pending(0.9),
-                            colors.warning(0.9),
                             colors.primary(0.9),
+                            colors.pending(0.9),
                         ],
                         borderWidth: 5,
                         borderColor: $("html").hasClass("dark")
