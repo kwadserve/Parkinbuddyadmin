@@ -231,8 +231,14 @@ class ParkingController extends Controller
     public function growthCalculator($currentMonth,$previousMonth)
     {
         $isPlusOrMinus = $currentMonth - $previousMonth;
-        $devideByPrevious = $isPlusOrMinus/$previousMonth;
-        $growthRate = $devideByPrevious * 100;
+        // dd($isPlusOrMinus,$currentMonth,$previousMonth);
+        if($previousMonth != 0){
+            $devideByPrevious = $isPlusOrMinus/$previousMonth;
+            $growthRate = $devideByPrevious * 100;
+        }else{
+            $growthRate = $isPlusOrMinus;
+        }
+       
         
         $isHigher = true;
         if($isPlusOrMinus < 0){ //if decrement
@@ -259,8 +265,15 @@ class ParkingController extends Controller
 
     public function calculateVechicleSales($fourWheeler,$twoWheeler){
         $totalUnitsSold = $fourWheeler+$twoWheeler;
-        $percentageFourWheelerSold = round(($fourWheeler / $totalUnitsSold) * 100);
-        $percentageTwoWheelerSold = round(($twoWheeler / $totalUnitsSold) * 100);
+        
+        $percentageFourWheelerSold = 0;
+        $percentageTwoWheelerSold = 0;
+        if(!empty($totalUnitsSold))
+        {
+            $percentageFourWheelerSold = ($fourWheeler != 0) ? round(($fourWheeler / $totalUnitsSold) * 100) : 0;
+            $percentageTwoWheelerSold = ($twoWheeler != 0) ? round(($twoWheeler / $totalUnitsSold) * 100) : 0;
+        }
+        
         $response = array(
             'fourWheelerCount' => $fourWheeler,
             'fourWheelerSold' => (int) $percentageFourWheelerSold,
