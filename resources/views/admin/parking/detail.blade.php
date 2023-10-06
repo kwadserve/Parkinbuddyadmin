@@ -24,16 +24,20 @@
 </div>
 <input type="hidden" id="parkingProfileId" value="{{$parkingDetails->id}}" />
 <input type="hidden" id="parkingUserId" value="{{$parkingDetails->user_id}}" />
-<input type="hidden" id="salesReportFeed1" value=<?=json_encode($salesReportFeed1); ?> />
-<input type="hidden" id="salesReportFeed2" value=<?=json_encode($salesReportFeed2); ?> />
 <input type="hidden" id="vechicleSalesGraphFeed" value=<?=json_encode($vechicleSalesGraphFeed); ?> />
+<input type="hidden" id="salesReportData" value=<?=json_encode($salesReportData); ?> />
+<input type="hidden" id="vehicleBookingsChartFourWheel" value=<?=json_encode($vehicleBookingsChartFourWheel); ?> />
+<input type="hidden" id="vehicleBookingsChartTwoWheel" value=<?=json_encode($vehicleBookingsChartTwoWheel); ?> />
+<input type="hidden" id="vechicleSalesChartFourWheel" value=<?=json_encode($vechicleSalesChartFourWheel); ?> />
+<input type="hidden" id="vechicleSalesChartTwoWheel" value=<?=json_encode($vechicleSalesChartTwoWheel); ?> />
+
 <!-- BEGIN: Official Store -->
-<div class="col-span-12 lg:col-span-8 mt-6">
+<!-- <div class="col-span-12 lg:col-span-8 mt-6">
     <div class="intro-y box p-5 mt-12 sm:mt-5">
         <div>Latitude : 18.2432 | Longitude : 78.3490</div>
         <div class="report-maps mt-5 bg-slate-200 rounded-md" data-center="-6.2425342, 106.8626478" data-sources="{{ URL::asset('dist/json/location.json') }}"></div>
     </div>
-</div>
+</div> -->
 <!-- END: Official Store -->
 <!-- BEGIN: Profile Info -->
 <div class="intro-y box px-5 pt-5 mt-5">
@@ -170,10 +174,10 @@
                                         <div class="flex">
                                             <i data-lucide="user" class="report-box__icon text-success"></i> 
                                             <div class="ml-auto">
-                                                <div class="report-box__indicator bg-success tooltip cursor-pointer" title="22% Higher than last month"> 22% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
+                                                <div class="report-box__indicator bg-success tooltip cursor-pointer" title="22% Higher than last month" style="display:none;"> 22% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> </div>
                                             </div>
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">152.040</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{$usersTotalCount}}</div>
                                         <div class="text-base text-slate-500 mt-1">Total Users</div>
                                     </div>
                                 </div>
@@ -296,7 +300,7 @@
                         <div class="intro-y box">
                             <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
                                 <h2 class="font-medium text-base mr-auto">
-                                    Two Wheeler Vs Four Wheeler Sales
+                                Four Wheeler Vs Two Wheeler Sales
                                 </h2>
                                 
                             </div>

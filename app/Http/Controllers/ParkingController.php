@@ -102,7 +102,7 @@ class ParkingController extends Controller
         $firstDayOfMonth = $currentDate->firstOfMonth()->toDateTimeString();
         $lastDayOfMonth = $currentDate->lastOfMonth()->endOfDay()->toDateTimeString();
       
-        $graphTotalBookingsOfMonth = $this->calculateMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth,true);
+        $graphTotalBookingsOfMonth = $this->calculateMonthSale($parkingDetails['id'],$firstDayOfMonth,$lastDayOfMonth,true,null);
         $totalSales = $graphTotalBookingsOfMonth['totalSales'];
         $totalParkingBookings = $graphTotalBookingsOfMonth['totalParkingBookings'];
         $totalRefundRaised = $graphTotalBookingsOfMonth['totalRefundRaised'] ?? 0;
@@ -111,7 +111,7 @@ class ParkingController extends Controller
         $currentDateCalc = Carbon::now();
         $lastMonthLastDay = $currentDateCalc->subMonthNoOverflow()->lastOfMonth()->endOfDay()->toDateTimeString();
         
-        $graphTotalBookingsOfLastMonth = $this->calculateMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay,false);
+        $graphTotalBookingsOfLastMonth = $this->calculateMonthSale($parkingDetails['id'],$lastMonthFirstDay,$lastMonthLastDay,false,null);
         $totalSalesLastMonth = $graphTotalBookingsOfLastMonth['totalSales'];
         $totalParkingBookingsLastMonth = $graphTotalBookingsOfLastMonth['totalParkingBookings'];
        
@@ -136,9 +136,14 @@ class ParkingController extends Controller
         $totalPassSoldGrowthIsHigher = $totalPassSoldGrowthData['isHigher'];
         //total pass sold calc
 
+        //total users
+        $usersTotalCount = User::where("role_id",2)->count(); 
+        //total users
+
         //sales report
-        // $currentMonthBookings = $allBookingData->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->get();
-        
+        $extraFilter = array("salesReport" => true);
+        $salesReportData = $this->calculateYearlySale($parkingDetails['id'],$extraFilter);
+        $salesReportData = $salesReportData['salesReport'];
         //sales report
 
         //vehicle sale graph
@@ -146,13 +151,22 @@ class ParkingController extends Controller
         $vechicleSalesGraphFeed = array($vechicleGraphSales['fourWheelerSold'],$vechicleGraphSales['twoWheelerSold']);
         //vehicle sale graph
 
-        $salesReportFeed1= array( 0, 200, 250, 200, 700, 550, 650, 1050, 950, 1100,
-        900, 1200,);
-        $salesReportFeed2= array( 0, 300, 400, 560, 320, 600, 720, 850, 690, 805,
-        1200, 1010,);
-        // $userVehicleData = Vehicle::where("user_id",$userDetails['id'])->paginate($perPage);
-        // $userVehicleData = array();
-        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','salesReportFeed1','salesReportFeed2','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher','totalPassSold','totalPassSoldGrowthIsHigher','totalPassSoldGrowth','totalSalesLastMonth','totalRefundRaised','vechicleGraphSales','vechicleSalesGraphFeed'));
+        //vehicle bookings line chart
+        $extraFilter = array("vehicleBookingsChart" => true);
+        $vehicleBookingsChart = $this->calculateYearlySale($parkingDetails['id'],$extraFilter);
+        $vehicleBookingsChartFourWheel = $vehicleBookingsChart['vehicleBookingsChart']['fourWheelerCount'];
+        $vehicleBookingsChartTwoWheel = $vehicleBookingsChart['vehicleBookingsChart']['twoWheelerCount'];
+        //vehicle bookings line chart
+
+        //vehicle sales line chart
+        $extraFilter = array("vehicleSalesChart" => true);
+        $vechicleSalesChart = $this->calculateYearlySale($parkingDetails['id'],$extraFilter);
+        $vechicleSalesChartFourWheel = $vechicleSalesChart['vehicleSalesChart']['fourWheelerSales'];
+        $vechicleSalesChartTwoWheel = $vechicleSalesChart['vehicleSalesChart']['twoWheelerSales'];
+        
+        //vehicle sales line chart
+
+        return view('admin.parking.detail', compact('parkingDetails','userBookingCount','userBookingCashCollection','userBookingChargeCollection','bookingData','userPassData','totalParkingBookings','totalSales','totalParkingsCount','totalSalesGrowth','totalSalesIsHigher','totalParkingGrowth','totalParkingGrowthIsHigher','totalPassSold','totalPassSoldGrowthIsHigher','totalPassSoldGrowth','totalSalesLastMonth','totalRefundRaised','vechicleGraphSales','vechicleSalesGraphFeed','usersTotalCount','salesReportData','vehicleBookingsChartFourWheel','vehicleBookingsChartTwoWheel','vechicleSalesChartFourWheel','vechicleSalesChartTwoWheel'));
     }
 
     public function parkingBookingListing(Request $request){
@@ -192,9 +206,16 @@ class ParkingController extends Controller
         return view('admin.parking.pass-list', compact('userPassData'))->render();
     }
 
-    public function calculateMonthSale($parkingId,$startdate,$enddate,$iscurrentMonth) {
+    public function calculateMonthSale($parkingId,$startdate,$enddate,$iscurrentMonth,$extras=array()) {
         
         $graphTotalBookingsOfMonth = Booking::where('parking_id',$parkingId)->whereBetween('created_at', [$startdate, $enddate])->get();
+
+        if(isset($extras['filterFourWheelerSale']) && $extras['filterFourWheelerSale'])
+        {
+            $graphTotalBookingsOfMonth = Booking::where('parking_id',$parkingId)->whereBetween('created_at', [$startdate, $enddate])->where('vehicle_type',1)->get();
+        }else if(isset($extras['filterFourWheelerSale']) && $extras['filterFourWheelerSale']){
+            $graphTotalBookingsOfMonth = Booking::where('parking_id',$parkingId)->whereBetween('created_at', [$startdate, $enddate])->where('vehicle_type',0)->get();
+        }
 
         $totalParkingBookings = count($graphTotalBookingsOfMonth);
         $totalSales = 0;
@@ -221,7 +242,6 @@ class ParkingController extends Controller
             $response['totalRefundRaised'] = $getRefundRaisedData;
             $response['fourWheelerCount'] = $fourWheelerCount;
             $response['twoWheelerCount'] = $twoWheelerCount;
-
 
         }
 
@@ -282,4 +302,57 @@ class ParkingController extends Controller
         );
         return $response;
     }
+
+    public function calculateYearlySale($parkingId,$extraFilter)
+    {
+        $currentYear = Carbon::now()->year;;
+        $montlySalesReportData = array();
+        $monthlyVechicleBookingsData = array(
+            'fourWheelerCount' => array(),
+            'twoWheelerCount' => array(),
+        );
+        $monthlyVechicleSalesData = array(
+            'fourWheelerSales' => array(),
+            'twoWheelerSales' => array(),
+        );
+        for ($month = 1; $month <= 12; $month++) {
+            // Create a Carbon instance for the first day of the current month
+            $monthWiseStartDate = Carbon::create($currentYear, $month, 1)->startOfDay();
+            $monthWiseStartDate = $monthWiseStartDate->format('Y-m-d H:i:s');
+
+            // Create a Carbon instance for the last day of the current month
+            $monthWiseEndDate = Carbon::create($currentYear, $month, 1)->endOfMonth()->endOfDay();
+            $monthWiseEndDate = $monthWiseEndDate->format('Y-m-d H:i:s');
+            
+            $extras = array();
+            $togetVehicleCount = false;
+            if(isset($extraFilter['vehicleBookingsChart']) && $extraFilter['vehicleBookingsChart'])
+            {
+              $togetVehicleCount = true;
+              $getMonthVechicleData = $this->calculateMonthSale($parkingId,$monthWiseStartDate,$monthWiseEndDate,$togetVehicleCount,$extras);
+              
+              $monthlyVechicleBookingsData['fourWheelerCount'][] = $getMonthVechicleData['fourWheelerCount'];
+              $monthlyVechicleBookingsData['twoWheelerCount'][] = $getMonthVechicleData['twoWheelerCount'];
+            }else if(isset($extraFilter['vehicleSalesChart']) && $extraFilter['vehicleSalesChart']){
+                $extras = array('filterFourWheelerSale' => true);
+                $getMonthlyFourWheelSaleData = $this->calculateMonthSale($parkingId,$monthWiseStartDate,$monthWiseEndDate,$togetVehicleCount,$extras);
+                $monthlyVechicleSalesData['fourWheelerSales'][] = $getMonthlyFourWheelSaleData['totalSales'];
+
+                $extras = array('filterTwoWheelerSale' => true);
+                $getMonthlyTwoWheelSaleData = $this->calculateMonthSale($parkingId,$monthWiseStartDate,$monthWiseEndDate,$togetVehicleCount,$extras);
+                $monthlyVechicleSalesData['twoWheelerSales'][] = $getMonthlyTwoWheelSaleData['totalSales'];
+            }else{
+                $getMonthSaleData = $this->calculateMonthSale($parkingId,$monthWiseStartDate,$monthWiseEndDate,$togetVehicleCount,$extras);
+                $montlySalesReportData[] = $getMonthSaleData['totalSales'];
+            }
+           
+        }
+
+        $response = array(
+            'salesReport' => $montlySalesReportData,
+            'vehicleBookingsChart' => $monthlyVechicleBookingsData,
+            'vehicleSalesChart' => $monthlyVechicleSalesData
+        );
+        return $response;
+    }   
 }

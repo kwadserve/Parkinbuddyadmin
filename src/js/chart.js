@@ -7,6 +7,7 @@ import Chart from "chart.js/auto";
 
     // Chart
     if ($("#report-line-chart").length) {
+        let salesReportData = $("#salesReportData").val();
         let ctx = $("#report-line-chart")[0].getContext("2d");
         let myChart = new Chart(ctx, {
             type: "line",
@@ -28,27 +29,9 @@ import Chart from "chart.js/auto";
                 datasets: [
                     {
                         label: "# of Votes",
-                        data: [
-                            0, 200, 250, 200, 700, 550, 650, 1050, 950, 1100,
-                            900, 1200,
-                        ],
+                        data: JSON.parse(salesReportData),
                         borderWidth: 2,
                         borderColor: colors.primary(0.8),
-                        backgroundColor: "transparent",
-                        pointBorderColor: "transparent",
-                        tension: 0.4,
-                    },
-                    {
-                        label: "# of Votes",
-                        data: [
-                            0, 300, 400, 560, 320, 600, 720, 850, 690, 805,
-                            1200, 1010,
-                        ],
-                        borderWidth: 2,
-                        borderDash: [2, 2],
-                        borderColor: $("html").hasClass("dark")
-                            ? colors.slate["400"](0.6)
-                            : colors.slate["400"](),
                         backgroundColor: "transparent",
                         pointBorderColor: "transparent",
                         tension: 0.4,
@@ -768,6 +751,8 @@ import Chart from "chart.js/auto";
 
     // Chart widget page
     if ($("#vertical-bar-chart-widget").length) {
+        let fourWheelCount = $("#vehicleBookingsChartFourWheel").val();
+        let twoWheelCount = $("#vehicleBookingsChartTwoWheel").val();
         let ctx = $("#vertical-bar-chart-widget")[0].getContext("2d");
         let myChart = new Chart(ctx, {
             type: "bar",
@@ -781,24 +766,28 @@ import Chart from "chart.js/auto";
                     "Jun",
                     "Jul",
                     "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
                 ],
                 datasets: [
                     {
-                        label: "Html Template",
+                        label: "Four Wheeler",
                         barPercentage: 0.5,
                         barThickness: 6,
                         maxBarThickness: 8,
                         minBarLength: 2,
-                        data: [0, 200, 250, 200, 500, 450, 850, 1050],
+                        data: JSON.parse(fourWheelCount),
                         backgroundColor: colors.primary(),
                     },
                     {
-                        label: "VueJs Template",
+                        label: "Two Wheeler",
                         barPercentage: 0.5,
                         barThickness: 6,
                         maxBarThickness: 8,
                         minBarLength: 2,
-                        data: [0, 300, 400, 560, 320, 600, 720, 850],
+                        data: JSON.parse(twoWheelCount),
                         backgroundColor: $("html").hasClass("dark")
                             ? colors.darkmode["200"]()
                             : colors.slate["300"](),
@@ -935,6 +924,9 @@ import Chart from "chart.js/auto";
     }
 
     if ($("#stacked-bar-chart-widget").length) {
+        let fourWheelSales = $("#vechicleSalesChartFourWheel").val();
+        let twoWheelSales = $("#vechicleSalesChartTwoWheel").val();
+
         let ctx = $("#stacked-bar-chart-widget")[0].getContext("2d");
         let myChart = new Chart(ctx, {
             type: "bar",
@@ -955,16 +947,17 @@ import Chart from "chart.js/auto";
                 ],
                 datasets: [
                     {
-                        label: "Html Template",
+                        label: "Four Wheeler",
                         barPercentage: 0.5,
                         barThickness: 6,
                         maxBarThickness: 8,
                         minBarLength: 2,
                         backgroundColor: colors.primary(),
-                        data: helper.randomNumbers(-100, 100, 12),
+                        data: JSON.parse(fourWheelSales),
+                        //data: helper.randomNumbers(-100, 100, 12),
                     },
                     {
-                        label: "VueJs Template",
+                        label: "Two Wheeler",
                         barPercentage: 0.5,
                         barThickness: 6,
                         maxBarThickness: 8,
@@ -972,7 +965,7 @@ import Chart from "chart.js/auto";
                         backgroundColor: $("html").hasClass("dark")
                             ? colors.darkmode["200"]()
                             : colors.slate["300"](),
-                        data: helper.randomNumbers(-100, 100, 12),
+                        data: JSON.parse(twoWheelSales),
                     },
                 ],
             },
