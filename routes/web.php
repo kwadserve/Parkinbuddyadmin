@@ -28,9 +28,12 @@ Route::get('/clear-cache', function (){
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/pb-login', function () {
+Route::get('pb-login', function () {
     return view('admin.login');
 })->name('login');
+Route::get('/check', function () {
+    return 'Route Works!';
+});
 
 Route::get('/user_logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/user_login', [AuthController::class, 'authenticate']);
