@@ -16,6 +16,5 @@ class Voucher extends Model
         'expiry',
         'discount',
         'vehicle_type',
-
     ];
 }

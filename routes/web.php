@@ -8,6 +8,7 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ParkingController;
+use App\Http\Controllers\VoucherController;
 
 /*
 |--------------------------------------------------------------------------

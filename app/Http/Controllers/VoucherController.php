@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Voucher;
+use Illuminate\Support\Facades\Config;
 
 class VoucherController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $configPerPage = Config::get('custom.perPageRecord');
         $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
@@ -18,7 +19,14 @@ class VoucherController extends Controller
 
     public function add_voucher(Request $request)
     {
-        $validated = $request->validate([]);
+        $validated = $request->validate([
+            'code' => 'required',
+            'title' => 'required',
+            'discount' => 'required',
+            'type' => 'required',
+            'vehicle_type' => 'required',
+            'expiry' => 'required'
+        ]);
         
         try {
             $voucher = Voucher::create($validated);
