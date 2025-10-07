@@ -45,10 +45,14 @@ Route::group(['middleware' => 'auth','prefix' => 'pb-admin'], function () {
     Route::get('/user/passes', [UserController::class, 'userPassesListing']);
     Route::get('/user/vehicles', [UserController::class, 'userVehiclesListing']);
     Route::get('/vehicles', [VehicleController::class, 'index']);
-    Route::get('/passes', [PassController::class, 'index']);
+    Route::get('/purchased-passes', [PassController::class, 'index']);
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/parkings', [ParkingController::class, 'index']);
+    Route::post('/parkings', [ParkingController::class, 'add_parking']);
     Route::get('/parkings/{id}/view', [ParkingController::class, 'viewDetail']);
     Route::get('/parking/bookings', [ParkingController::class, 'parkingBookingListing']);
     Route::get('/parking/passes', [ParkingController::class, 'parkingUserPassesListing']);
+    Route::get('passes/parking-pass', [PassController::class, 'showParkingPasses']);
+    Route::get('vouchers', [VoucherController::class, 'index']);
+    Route::post('vouchers', [VoucherController::class, 'add_voucher']);
 });

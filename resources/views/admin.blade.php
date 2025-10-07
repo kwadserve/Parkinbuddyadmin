@@ -712,7 +712,7 @@
                     </a>    
                 </li>
                 <li>
-                    <a href="{{ url('pb-admin/passes') }}" class="{{(str_contains(url()->current(), '/pb-admin/passes')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                    <a href="{{ url('pb-admin/purchased-passes') }}" class="{{(str_contains(url()->current(), '/pb-admin/purchased-passes')) ? 'side-menu side-menu--active' : 'side-menu'}}">
                         <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
                         <div class="side-menu__title">
                             Purchased Pass
@@ -732,6 +732,22 @@
                         <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
                         <div class="side-menu__title">
                             Parkings
+                        </div>
+                    </a>    
+                </li>
+                <li>
+                    <a href="{{ url('pb-admin/passes/parking-pass') }}" class="{{(str_contains(url()->current(), '/pb-admin/passes/parking-pass')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                        <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                        <div class="side-menu__title">
+                            Parking Pass
+                        </div>
+                    </a>    
+                </li>
+                <li>
+                    <a href="{{ url('pb-admin/vouchers') }}" class="{{(str_contains(url()->current(), '/pb-admin/vouchers')) ? 'side-menu side-menu--active' : 'side-menu'}}">
+                        <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
+                        <div class="side-menu__title">
+                            Vouchers
                         </div>
                     </a>    
                 </li>

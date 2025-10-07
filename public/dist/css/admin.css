@@ -3,8 +3,8 @@
 }
 /* Scrollbar width & background */
 ::-webkit-scrollbar {
-    width: 10px;   /* vertical scrollbar */
-    height: 10px;  /* horizontal scrollbar */
+    width: 5px;   /* vertical scrollbar */
+    height: 5px;  /* horizontal scrollbar */
   }
   
   /* Track (background area) */

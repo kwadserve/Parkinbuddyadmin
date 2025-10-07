@@ -182,7 +182,8 @@ class ParkingController extends Controller
                             $q->where('booking_id', 'like', '%'.$request->seach_term.'%');
                         })
                         ->paginate($perPage);
-            return view('admin.parking.booking-list', compact('bookingData'))->render();
+
+        return view('admin.parking.booking-list', compact('bookingData'))->render();
     }
 
     public function parkingUserPassesListing(Request $request){
@@ -258,7 +259,6 @@ class ParkingController extends Controller
         }else{
             $growthRate = $isPlusOrMinus;
         }
-       
         
         $isHigher = true;
         if($isPlusOrMinus < 0){ //if decrement
@@ -354,5 +354,29 @@ class ParkingController extends Controller
             'vehicleSalesChart' => $monthlyVechicleSalesData
         );
         return $response;
-    }   
+    }
+
+    public function add_parking(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id'   => 'required|exists:users,id',
+            'place_type'=> 'required|integer',
+            'name'      => 'required|string|min:8',
+            'city'      => 'required|string|max:255',
+            'state'     => 'required|string|min:6|max:255',
+            'address'   => 'required|string|min:10',
+            'pin_code'  => 'required|digits_between:4,8',
+            'latitude'  => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        try {
+            // ✅ Create parking record
+            $parking = Parking::create($validated);
+
+            return redirect()->back()->with('success', 'Parking registered successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
+        }
+    }
 }

@@ -12,4 +12,14 @@ class ParkingPass extends Model
         'parking_id',
         'pass_id',
     ];
+
+    public function parking()
+    {
+        return $this->belongsTo(Parking::class, 'parking_id');
+    }
+
+    public function pass()
+    {
+        return $this->belongsTo(Pass::class, 'pass_id');
+    }
 }

@@ -43,6 +43,10 @@
                             </a>
                         </div>
                     </div>
+                    @php
+                        $operators = App\Models\User::select('id', 'name')->where('role_id', 4)->get();
+                        $managers = App\Models\User::select('id', 'name')->where('role_id', 3)->get();
+                    @endphp
                     <div id="header-footer-modal" class="p-5">
                         <div class="preview">
                             <!-- BEGIN: Modal Content -->
@@ -54,30 +58,17 @@
                                             <h2 class="font-medium text-base mr-auto">
                                                 Add Parking
                                             </h2>
-                                            <div class="dropdown sm:hidden">
-                                                <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"
-                                                    aria-expanded="false" data-tw-toggle="dropdown"> <i
-                                                        data-lucide="more-horizontal" class="w-5 h-5 text-slate-500"></i>
-                                                </a>
-                                                <div class="dropdown-menu w-40">
-                                                    <ul class="dropdown-content">
-                                                        <li>
-                                                            <a href="javascript:;" class="dropdown-item"> <i
-                                                                    data-lucide="file" class="w-4 h-4 mr-2"></i> Download
-                                                                Docs </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
                                         </div>
                                         <!-- END: Modal Header -->
-                                        <form class="validate-form">
+                                        <form action="{{ url('pb-admin/parkings') }}" method="POST" >
+                                            @csrf
+                                            <input type="hidden" value="{{ Auth::user()->id }}" name="user_id">
+                                            <input type="hidden" value="1" name="place_type">
                                             <!-- BEGIN: Modal Body -->
                                             <div class="modal-body intro-y box">
                                                 <div id="form-validation">
                                                     <div class="preview">
                                                         <!-- BEGIN: Validation Form -->
-
                                                         <div class="input-form">
                                                             <label for="validation-form-1"
                                                                 class="form-label w-full flex flex-col sm:flex-row"> Name on
@@ -90,50 +81,51 @@
                                                         </div>
                                                         <div class="input-form mt-3">
                                                             <label for="validation-form-2"
-                                                                class="form-label w-full flex flex-col sm:flex-row"> Email
+                                                                class="form-label w-full flex flex-col sm:flex-row">City
                                                                 <span
-                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required,
-                                                                    email address format</span> </label>
-                                                            <input id="validation-form-2" type="email" name="email"
-                                                                class="form-control" placeholder="example@gmail.com"
+                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required</span> </label>
+                                                            <input id="validation-form-2" type="text" name="city"
+                                                                class="form-control" placeholder="Pune"
                                                                 required>
                                                         </div>
                                                         <div class="input-form mt-3">
                                                             <label for="validation-form-3"
                                                                 class="form-label w-full flex flex-col sm:flex-row">
-                                                                Password <span
-                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required,
-                                                                    at least 6 characters</span> </label>
-                                                            <input id="validation-form-3" type="password" name="password"
-                                                                class="form-control" placeholder="secret" minlength="6"
+                                                                State <span
+                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required</span> </label>
+                                                            <input id="validation-form-3" type="text" name="state"
+                                                                class="form-control" placeholder="Maharashtra" minlength="6"
                                                                 required>
                                                         </div>
                                                         <div class="input-form mt-3">
                                                             <label for="validation-form-4"
-                                                                class="form-label w-full flex flex-col sm:flex-row"> Age
+                                                                class="form-label w-full flex flex-col sm:flex-row">Address
                                                                 <span
                                                                     class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required,
-                                                                    integer only & maximum 3 characters</span> </label>
-                                                            <input id="validation-form-4" type="number" name="age"
-                                                                class="form-control" placeholder="21" required>
+                                                                    at least 10 characters</span> </label>
+                                                                    <textarea id="validation-form-4" class="form-control" name="address" placeholder="Type your addess"
+                                                                    minlength="10" required></textarea>
+                                                        </div>
+                                                        <div class="input-form mt-3">
+                                                            <label for="validation-form-7"
+                                                                class="form-label w-full flex flex-col sm:flex-row">Pincode <span
+                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required</span> </label>
+                                                            <input id="validation-form-7" type="number" name="pin_code"
+                                                                class="form-control" placeholder="184455">
                                                         </div>
                                                         <div class="input-form mt-3">
                                                             <label for="validation-form-5"
-                                                                class="form-label w-full flex flex-col sm:flex-row">
-                                                                Profile URL <span
-                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Optional,
-                                                                    URL format</span> </label>
-                                                            <input id="validation-form-5" type="url" name="url"
-                                                                class="form-control" placeholder="https://google.com">
+                                                                class="form-label w-full flex flex-col sm:flex-row">Latitude <span
+                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Optional</span> </label>
+                                                            <input id="validation-form-5" type="number" name="latitude" step="any"
+                                                                class="form-control" placeholder="18.36455">
                                                         </div>
                                                         <div class="input-form mt-3">
                                                             <label for="validation-form-6"
-                                                                class="form-label w-full flex flex-col sm:flex-row">
-                                                                Comment <span
-                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Required,
-                                                                    at least 10 characters</span> </label>
-                                                            <textarea id="validation-form-6" class="form-control" name="comment" placeholder="Type your comments"
-                                                                minlength="10" required></textarea>
+                                                                class="form-label w-full flex flex-col sm:flex-row">Longitude <span
+                                                                    class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">Optional</span> </label>
+                                                            <input id="validation-form-6" type="number" name="longitude" step="any"
+                                                                class="form-control" placeholder="18.36455">
                                                         </div>
 
                                                         <!-- END: Validation Form -->

@@ -6,7 +6,7 @@
         <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Parkinbuddy</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Vehicles</li>
+                <li class="breadcrumb-item active" aria-current="page">Parking Passes</li>
             </ol>
         </nav>
         <!-- END: Breadcrumb -->
@@ -15,18 +15,19 @@
     <!-- END: Top Bar -->
     <!-- BEGIN: Main Content -->
     <div class="intro-y flex items-center mt-8">
-        <h2 class="text-lg font-medium mr-auto">All Vehicles</h2>
+        <h2 class="text-lg font-medium mr-auto">All Parking Passes</h2>
     </div>
-    <div id="example-tab-5" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-5-tab">
-        <!-- BEGIN: bookings -->
+
+    <!-- BEGIN: purchased passes -->
+    <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
         <div class="">
-            <input type="hidden" id="vehiclePageNumber" value="1" />
+            <input type="hidden" id="passPageNumber" value="1" />
             <div class="grid grid-cols-12 gap-6 mt-5">
                 <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2">
                     <div class="flex w-full sm:w-auto">
                         <div class="w-48 relative text-slate-500">
-                            <input type="text" id="userVehicleSearch" class="form-control w-48 box pr-10"
-                                placeholder="Search by Vehicle Number">
+                            <input type="text" id="parkingSearch" class="form-control w-48 box pr-10"
+                                placeholder="Search by Parking Name">
                             <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i>
                         </div>
                     </div>
@@ -37,48 +38,51 @@
                     </div>
                 </div>
             </div>
-            <div class="vehicle-list-container" id="vehicle-list-container">
-                @include('admin.vehicle.vehicle-list')
-            </div>
+        </div>
+        <div class="pass-list-container" id="pass-list-container">
+            @include('admin.pass.parking-pass-list')
         </div>
     </div>
 
+    <!-- END: purchased passes -->
+
     <!-- END: Main Content -->
 @endsection
-
 @section('scripts')
     <script>
         let baseurl = $('#mainUrl').val();
         $(document).ready(function() {
-            //==========================user vehicle listing start=================
-            const loadUserVehicles = (page, search_term, perpage) => {
+            //==========================user pass listing start=================
+            const loadUserPasses = (page, search_term, perpage) => {
                 $.ajax({
                     method: 'GET',
-                    url: `${baseurl}/pb-admin/vehicles?page=${page}&seach_term=${search_term}&perpage=${perpage}`,
+                    url: `${baseurl}/pb-admin/passes/parking-pass?page=${page}&search_term=${search_term}&perpage=${perpage}`,
                     success: function(response) {
-                        $('#vehicle-list-container').html(response);
+                        // $('#pass-list-container').html('');
+                        $('#pass-list-container').html(response);
                     }
                 })
             }
 
-            $(document).on('keyup', '#userVehicleSearch', function() {
-                var search_term = $('#userVehicleSearch').val();
-                loadUserVehicles(1, search_term, 0);
+            $(document).on('keyup', '#parkingSearch', function() {
+                var search_term = $('#parkingSearch').val();
+                loadUserPasses(1, search_term, 0);
             });
 
-            $(document).on('click', '#example-tab-5 .pagination a', function(event) {
+            $(document).on('click', '#example-tab-4 .pagination a', function(event) {
                 event.preventDefault();
                 let page = $(this).attr('href').split('page=')[1];
-                $("#vehiclePageNumber").val(page);
-                var search_term = $('#userVehicleSearch').val();
-                loadUserVehicles(page, search_term, 0);
+                $("#passPageNumber").val(page);
+                var search_term = $('#parkingSearch').val();
+                loadUserPasses(page, search_term, 0);
             });
 
-            $(document).on('change', '#userVehicles select.perPageSelectBox', function(event) {
+            $(document).on('change', '#userPasses select.perPageSelectBox', function(event) {
                 let perpage = $(this).val();
-                let search_term = $('#userVehicleSearch').val();
-                loadUserVehicles(1, search_term, perpage);
+                let search_term = $('#parkingSearch').val();
+                loadUserPasses(1, search_term, perpage);
             });
+            //================user pass listing end=================================
         });
     </script>
 @endsection

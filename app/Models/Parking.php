@@ -23,7 +23,6 @@ class Parking extends Model
         'assigned',
         'operator_id',
         'manager_id',
-
     ];
 
     public function parkingMeta()

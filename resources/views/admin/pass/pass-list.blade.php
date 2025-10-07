@@ -4,7 +4,7 @@ use App\Models\Pass;
 ?>
 <div class="grid grid-cols-12 gap-6 mt-5">
     <!-- BEGIN: Data List -->
-    <div class="intro-y col-span-12 overflow-y-auto 2xl:overflow-visible">
+    <div class="intro-y col-span-12 2xl:overflow-visible" style="overflow-x: auto">
         <table class="table table-report -mt-2">
             <thead>
                 <tr>

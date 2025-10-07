@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use App\Models\UserPass;
 use App\Models\Pass;
+use App\Models\ParkingPass;
 
 class PassController extends Controller
 {
@@ -33,8 +34,28 @@ class PassController extends Controller
             ->join('passes', 'user_passes.pass_id', '=', 'passes.id');
             $userPassData = $query->paginate($perPage);
             return view('admin.pass.index', compact('userPassData'))->render();
-        }
+        }        
+    }
 
+    public function showParkingPasses(Request $request)
+    {   
+        $configPerPage = Config::get('custom.perPageRecord');
+        $perPage = ($request->input('perpage') && $request->filled('perpage')) ? $request->input('perpage') : $configPerPage;
         
+        if($request->ajax()){
+            $searchKey = $request->input('search_term');
+            $records = ParkingPass::with(['parking', 'pass'])
+                        ->when($searchKey, function ($query, $searchKey) {
+                            $query->whereHas('parking', function ($q) use ($searchKey) {
+                                $q->where('name', 'LIKE', '%' . $searchKey . '%');
+                            });
+                        })
+                        ->paginate($perPage);
+            
+            return view('admin.pass.parking-pass-list', compact('records'))->render();
+        } else {
+            $records = ParkingPass::with(['parking', 'pass'])->paginate($perPage);
+            return view('admin.pass.parking-pass', compact('records'));
+        }        
     }
 }
